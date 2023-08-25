@@ -40,7 +40,7 @@ model course {
   id        String   @id  @default(uuid())
   name      String
   sections  section[]
-  registrations courseRegistration[]
+  tests     test[]
 
   deptId    String
   cordinatorId String
@@ -71,12 +71,56 @@ model courseRegistration {
   id        String   @id  @default(uuid())
   regNo     String
   name      String
+  marks     marking[]
 
   sectionId String
-  courseId  String
   section   section  @relation(fields: [sectionId], references: [id])
-  course    course   @relation(fields: [courseId], references: [id])
   @@unique([sectionId, regNo])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model test {
+  id        String   @id  @default(uuid())
+  name      String
+  date      DateTime
+  parts     Int
+  partNames String[]
+  maxMarks  Int
+  questions question[]
+
+  courseId  String
+  course    course @relation(fields: [courseId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model question {
+  id        String   @id  @default(uuid())
+  name      String
+  objective Int
+  maxMarks  Int
+  partName  String
+  marks     marking[]
+
+  testId    String
+  test      test @relation(fields: [testId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model marking {
+  id        String   @id  @default(uuid())
+  marks     Int
+
+  regId     String
+  reg       courseRegistration @relation(fields: [regId], references: [id])
+  questionId String
+  question  question @relation(fields: [questionId], references: [id])
+  @@unique([questionId, regId])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
