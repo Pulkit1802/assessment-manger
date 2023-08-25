@@ -9,3 +9,75 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model dept {
+  id        String   @id  @default(uuid())
+  name      String
+  users     user[]
+  courses   course[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model user {
+  id        String   @id  @default(uuid())
+  email     String   @unique
+  name      String
+  password  String
+  role      Int
+  sections  section[]
+
+  deptId    String
+  dept      dept     @relation(fields: [deptId], references: [id])
+  cordinatedCourses course[] @relation("CourseCordinated")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model course {
+  id        String   @id  @default(uuid())
+  name      String
+  sections  section[]
+  registrations courseRegistration[]
+
+  deptId    String
+  cordinatorId String
+  dept      dept @relation(fields: [deptId], references: [id])
+  cordinator user @relation("CourseCordinated",fields: [cordinatorId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model section {
+  id        String   @id  @default(uuid())
+  name      String
+  batch     String
+  registrations courseRegistration[]
+
+  courseId  String
+  userId    String
+  course    course @relation(fields: [courseId], references: [id])
+  user      user     @relation(fields: [userId], references: [id])
+  @@unique([courseId, userId])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model courseRegistration {
+  id        String   @id  @default(uuid())
+  regNo     String
+  name      String
+
+  sectionId String
+  courseId  String
+  section   section  @relation(fields: [sectionId], references: [id])
+  course    course   @relation(fields: [courseId], references: [id])
+  @@unique([sectionId, regNo])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
