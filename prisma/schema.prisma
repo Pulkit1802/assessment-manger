@@ -41,6 +41,7 @@ model course {
   name      String
   sections  section[]
   tests     test[]
+  courseReports courseReport[]
 
   deptId    String
   cordinatorId String
@@ -56,6 +57,7 @@ model section {
   name      String
   batch     String
   registrations courseRegistration[]
+  sectionReports sectionReport[]
 
   courseId  String
   userId    String
@@ -85,10 +87,13 @@ model test {
   id        String   @id  @default(uuid())
   name      String
   date      DateTime
+  requiredScore Float
   parts     Int
   partNames String[]
   maxMarks  Int
   questions question[]
+  sectionReports sectionReport[]
+  courseReports courseReport[]
 
   courseId  String
   course    course @relation(fields: [courseId], references: [id])
@@ -121,6 +126,34 @@ model marking {
   questionId String
   question  question @relation(fields: [questionId], references: [id])
   @@unique([questionId, regId])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model sectionReport {
+  id        String   @id  @default(uuid())
+  name      String
+  avgMarks  Float
+
+  testId    String
+  test      test @relation(fields: [testId], references: [id])
+  sectionId String
+  section   section @relation(fields: [sectionId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model courseReport {
+  id        String   @id  @default(uuid())
+  name      String
+  avgMarks  Float
+
+  testId    String
+  test      test @relation(fields: [testId], references: [id])
+  courseId  String
+  course    course @relation(fields: [courseId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
