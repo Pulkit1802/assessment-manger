@@ -13,8 +13,10 @@ datasource db {
 model dept {
   id        String   @id  @default(uuid())
   name      String
-  users     user[]
-  courses   course[]
+
+  users     user[]  @relation("UsersUnderDept")
+  courses   course[] @relation("CoursesUnderDept")
+  students  student[] @relation("StudentsUnderDept")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -23,14 +25,34 @@ model dept {
 model user {
   id        String   @id  @default(uuid())
   email     String   @unique
-  name      String
   password  String
+  name      String
+  phoneNumber String
   role      Int
-  sections  section[]
+
+  cordinatedCourses course[] @relation("CourseCordinated")
+  sections  section[] @relation("SectionsTaught")
 
   deptId    String
-  dept      dept     @relation(fields: [deptId], references: [id])
-  cordinatedCourses course[] @relation("CourseCordinated")
+  dept      dept     @relation("UsersUnderDept", fields: [deptId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model student {
+  id        String   @id  @default(uuid())
+  regNo     String   @unique
+  name      String
+  phoneNumber String
+  email     String  @unique
+  batch     String
+
+  sections section[] @relation("SectionsAssigned")
+  marks    marking[] @relation("MarksObtainedByStudent")
+
+  deptId    String
+  dept      dept     @relation("StudentsUnderDept", fields: [deptId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -39,14 +61,15 @@ model user {
 model course {
   id        String   @id  @default(uuid())
   name      String
-  sections  section[]
+
+  sections  section[] @relation("SectionsUnderCourse")
   tests     test[]
   courseReports courseReport[]
 
   deptId    String
   cordinatorId String
-  dept      dept @relation(fields: [deptId], references: [id])
-  cordinator user @relation("CourseCordinated",fields: [cordinatorId], references: [id])
+  dept      dept @relation("CoursesUnderDept", fields: [deptId], references: [id])
+  cordinator user @relation("CourseCordinated", fields: [cordinatorId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -54,30 +77,18 @@ model course {
 
 model section {
   id        String   @id  @default(uuid())
-  name      String
+  roomNo    String
   batch     String
-  registrations courseRegistration[]
-  sectionReports sectionReport[]
+  semester  Int
+
+  students  student[] @relation("SectionsAssigned")
+  reports   sectionReport[]
 
   courseId  String
   userId    String
-  course    course @relation(fields: [courseId], references: [id])
-  user      user     @relation(fields: [userId], references: [id])
+  course    course @relation("SectionsUnderCourse", fields: [courseId], references: [id]) 
+  user      user     @relation("SectionsTaught", fields: [userId], references: [id])
   @@unique([courseId, userId])
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model courseRegistration {
-  id        String   @id  @default(uuid())
-  regNo     String
-  name      String
-  marks     marking[]
-
-  sectionId String
-  section   section  @relation(fields: [sectionId], references: [id])
-  @@unique([sectionId, regNo])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -86,17 +97,31 @@ model courseRegistration {
 model test {
   id        String   @id  @default(uuid())
   name      String
-  date      DateTime
-  requiredScore Float
-  parts     Int
-  partNames String[]
+  requiredPercentage Float
   maxMarks  Int
-  questions question[]
+
+  parts     part[]
   sectionReports sectionReport[]
   courseReports courseReport[]
 
   courseId  String
   course    course @relation(fields: [courseId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model part {
+  id        String   @id  @default(uuid())
+  name      String
+  maxQuestions Int
+  requiredQuestions Int
+  maxMarks  Int
+
+  questions question[]  @relation("TestParts")
+
+  testId    String
+  test      test @relation(fields: [testId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -107,11 +132,11 @@ model question {
   name      String
   objective Int
   maxMarks  Int
-  partName  String
-  marks     marking[]
 
-  testId    String
-  test      test @relation(fields: [testId], references: [id])
+  marks     marking[] @relation("MarksObtainedOnQuestion")
+
+  partId    String
+  part      part @relation("TestParts", fields: [partId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -119,13 +144,13 @@ model question {
 
 model marking {
   id        String   @id  @default(uuid())
-  marks     Int
+  marksObtained     Int
 
-  regId     String
-  reg       courseRegistration @relation(fields: [regId], references: [id])
-  questionId String
-  question  question @relation(fields: [questionId], references: [id])
-  @@unique([questionId, regId])
+  studentId     String
+  questionId    String
+  student   student @relation("MarksObtainedByStudent", fields: [studentId], references: [id])
+  question  question @relation("MarksObtainedOnQuestion", fields: [questionId], references: [id])
+  @@unique([studentId, questionId])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -137,9 +162,10 @@ model sectionReport {
   avgMarks  Float
 
   testId    String
-  test      test @relation(fields: [testId], references: [id])
   sectionId String
+  test      test @relation(fields: [testId], references: [id])
   section   section @relation(fields: [sectionId], references: [id])
+  @@unique([testId, sectionId])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -151,9 +177,10 @@ model courseReport {
   avgMarks  Float
 
   testId    String
-  test      test @relation(fields: [testId], references: [id])
   courseId  String
+  test      test @relation(fields: [testId], references: [id])
   course    course @relation(fields: [courseId], references: [id])
+  @@unique([testId, courseId])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
