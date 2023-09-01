@@ -17,6 +17,21 @@ model dept {
   users     user[]  @relation("UsersUnderDept")
   courses   course[] @relation("CoursesUnderDept")
   students  student[] @relation("StudentsUnderDept")
+  programs  program[] @relation("ProgramsUnderDept")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model program {
+  id        String   @id  @default(uuid())
+  name      String
+
+  programSpecificCourses course[] @relation("ProgramSpecificCourses")
+  reports   report[]
+
+  deptId    String
+  dept      dept     @relation("ProgramsUnderDept", fields: [deptId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -61,13 +76,16 @@ model student {
 model course {
   id        String   @id  @default(uuid())
   name      String
+  type      String
 
   sections  section[] @relation("SectionsUnderCourse")
   tests     test[]
-  courseReports courseReport[]
+  reports   report[]
 
   deptId    String
   cordinatorId String
+  programId String?
+  program   program? @relation("ProgramSpecificCourses", fields: [programId], references: [id])
   dept      dept @relation("CoursesUnderDept", fields: [deptId], references: [id])
   cordinator user @relation("CourseCordinated", fields: [cordinatorId], references: [id])
 
@@ -82,7 +100,8 @@ model section {
   semester  Int
 
   students  student[] @relation("SectionsAssigned")
-  reports   sectionReport[]
+  reports   report[]
+  markings  marking[] @relation("MarksObtainedByStudent")
 
   courseId  String
   userId    String
@@ -101,8 +120,7 @@ model test {
   maxMarks  Int
 
   parts     part[]
-  sectionReports sectionReport[]
-  courseReports courseReport[]
+  reports   report[]
 
   courseId  String
   course    course @relation(fields: [courseId], references: [id])
@@ -132,8 +150,10 @@ model question {
   name      String
   objective Int
   maxMarks  Int
+  subparts  Json?
 
   marks     marking[] @relation("MarksObtainedOnQuestion")
+  questionReports questionReport[] @relation("QuestionReport")
 
   partId    String
   part      part @relation("TestParts", fields: [partId], references: [id])
@@ -144,43 +164,55 @@ model question {
 
 model marking {
   id        String   @id  @default(uuid())
-  marksObtained     Int
+  totalMarksObtained     Int
+  subpartMarksObtained Json?
 
   studentId     String
   questionId    String
+  sectionId     String
   student   student @relation("MarksObtainedByStudent", fields: [studentId], references: [id])
+  section   section @relation("MarksObtainedByStudent", fields: [sectionId], references: [id])
   question  question @relation("MarksObtainedOnQuestion", fields: [questionId], references: [id])
-  @@unique([studentId, questionId])
+  @@unique([studentId, questionId, sectionId])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
-model sectionReport {
+model report {
   id        String   @id  @default(uuid())
   name      String
+  type      String
+  objective Int
   avgMarks  Float
+  studentsAboveRequiredPercentage Int
 
-  testId    String
-  sectionId String
-  test      test @relation(fields: [testId], references: [id])
-  section   section @relation(fields: [sectionId], references: [id])
-  @@unique([testId, sectionId])
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model courseReport {
-  id        String   @id  @default(uuid())
-  name      String
-  avgMarks  Float
+  questions questionReport[] @relation("QuestionWiseStats")
 
   testId    String
   courseId  String
+  sectionId String?
+  programId String?
+  section   section? @relation(fields: [sectionId], references: [id])
+  program   program? @relation(fields: [programId], references: [id])
   test      test @relation(fields: [testId], references: [id])
   course    course @relation(fields: [courseId], references: [id])
-  @@unique([testId, courseId])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model questionReport {
+  id        String   @id  @default(uuid())
+  avgMarks  Float
+  studentsAttempted Int
+  studentsPassed Int
+  studentsFailed Int
+
+  questionId String
+  reportId   String
+  question   question @relation("QuestionReport", fields: [questionId], references: [id])
+  report     report @relation("QuestionWiseStats", fields: [reportId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
