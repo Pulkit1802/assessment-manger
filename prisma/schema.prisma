@@ -28,7 +28,7 @@ model program {
   name      String
 
   programSpecificCourses course[] @relation("ProgramSpecificCourses")
-  reports   report[]
+  reports   report[] @relation("ProgramReports")
 
   deptId    String
   dept      dept     @relation("ProgramsUnderDept", fields: [deptId], references: [id])
@@ -79,8 +79,8 @@ model course {
   type      String
 
   sections  section[] @relation("SectionsUnderCourse")
-  tests     test[]
-  reports   report[]
+  tests     test[]    @relation("TestsUnderCourse")
+  reports   report[]  @relation("CourseReports")
 
   deptId    String
   cordinatorId String
@@ -100,7 +100,7 @@ model section {
   semester  Int
 
   students  student[] @relation("SectionsAssigned")
-  reports   report[]
+  reports   report[]  @relation("SectionReports")
   markings  marking[] @relation("MarksObtainedByStudent")
 
   courseId  String
@@ -119,11 +119,11 @@ model test {
   requiredPercentage Float
   maxMarks  Int
 
-  parts     part[]
-  reports   report[]
+  parts     part[]  @relation("TestParts")
+  reports   report[]  @relation("TestReports")
 
   courseId  String
-  course    course @relation(fields: [courseId], references: [id])
+  course    course @relation("TestsUnderCourse", fields: [courseId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -136,10 +136,10 @@ model part {
   requiredQuestions Int
   maxMarks  Int
 
-  questions question[]  @relation("TestParts")
+  questions question[]  @relation("TestQuestions")
 
   testId    String
-  test      test @relation(fields: [testId], references: [id])
+  test      test @relation("TestParts", fields: [testId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -156,7 +156,7 @@ model question {
   questionReports questionReport[] @relation("QuestionReport")
 
   partId    String
-  part      part @relation("TestParts", fields: [partId], references: [id])
+  part      part @relation("TestQuestions", fields: [partId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -173,7 +173,7 @@ model marking {
   student   student @relation("MarksObtainedByStudent", fields: [studentId], references: [id])
   section   section @relation("MarksObtainedByStudent", fields: [sectionId], references: [id])
   question  question @relation("MarksObtainedOnQuestion", fields: [questionId], references: [id])
-  @@unique([studentId, questionId, sectionId])
+  @@unique([studentId, questionId])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -185,6 +185,8 @@ model report {
   type      String
   objective Int
   avgMarks  Float
+  studentsPassed Int
+  studentsFailed Int
   studentsAboveRequiredPercentage Int
 
   questions questionReport[] @relation("QuestionWiseStats")
@@ -193,10 +195,10 @@ model report {
   courseId  String
   sectionId String?
   programId String?
-  section   section? @relation(fields: [sectionId], references: [id])
-  program   program? @relation(fields: [programId], references: [id])
-  test      test @relation(fields: [testId], references: [id])
-  course    course @relation(fields: [courseId], references: [id])
+  section   section? @relation("SectionReports", fields: [sectionId], references: [id])
+  program   program? @relation("ProgramReports", fields: [programId], references: [id])
+  test      test @relation("TestReports", fields: [testId], references: [id])
+  course    course @relation("CourseReports", fields: [courseId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -206,8 +208,6 @@ model questionReport {
   id        String   @id  @default(uuid())
   avgMarks  Float
   studentsAttempted Int
-  studentsPassed Int
-  studentsFailed Int
 
   questionId String
   reportId   String
