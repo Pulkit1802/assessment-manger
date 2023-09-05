@@ -43,13 +43,13 @@ model user {
   password  String
   name      String
   phoneNumber String
-  role      Int
+  role      String
 
   cordinatedCourses course[] @relation("CourseCordinated")
   sections  section[] @relation("SectionsTaught")
 
-  deptId    String
-  dept      dept     @relation("UsersUnderDept", fields: [deptId], references: [id])
+  deptId    String?
+  dept      dept?     @relation("UsersUnderDept", fields: [deptId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -121,6 +121,7 @@ model test {
 
   parts     part[]  @relation("TestParts")
   reports   report[]  @relation("TestReports")
+  testMarkings  marking[] @relation("MarksInTest")
 
   courseId  String
   course    course @relation("TestsUnderCourse", fields: [courseId], references: [id])
@@ -152,7 +153,7 @@ model question {
   maxMarks  Int
   subparts  Json?
 
-  marks     marking[] @relation("MarksObtainedOnQuestion")
+  marks     questionMarking[] @relation("MarksObtainedOnQuestion")
   questionReports questionReport[] @relation("QuestionReport")
 
   partId    String
@@ -165,15 +166,29 @@ model question {
 model marking {
   id        String   @id  @default(uuid())
   totalMarksObtained     Int
-  subpartMarksObtained Json?
+  questionWiseMarksObtained questionMarking[] @relation("MarksObtainedOnQuestion")
 
   studentId     String
-  questionId    String
+  testId    String
   sectionId     String
   student   student @relation("MarksObtainedByStudent", fields: [studentId], references: [id])
   section   section @relation("MarksObtainedByStudent", fields: [sectionId], references: [id])
-  question  question @relation("MarksObtainedOnQuestion", fields: [questionId], references: [id])
-  @@unique([studentId, questionId])
+  test  test @relation("MarksInTest", fields: [testId], references: [id])
+  @@unique([studentId, testId, sectionId])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model questionMarking {
+  id        String   @id  @default(uuid())
+  marksObtained     Int
+
+  questionId     String
+  markingId    String
+  question   question @relation("MarksObtainedOnQuestion", fields: [questionId], references: [id])
+  marking   marking @relation("MarksObtainedOnQuestion", fields: [markingId], references: [id])
+  @@unique([questionId, markingId])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -185,6 +200,7 @@ model report {
   type      String
   objective Int
   avgMarks  Float
+  totalStudents Int
   studentsPassed Int
   studentsFailed Int
   studentsAboveRequiredPercentage Int
