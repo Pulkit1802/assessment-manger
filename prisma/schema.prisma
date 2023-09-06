@@ -47,6 +47,7 @@ model user {
 
   cordinatedCourses course[] @relation("CourseCordinated")
   sections  section[] @relation("SectionsTaught")
+  students  student[] @relation("FacultAdvisor")
 
   deptId    String?
   dept      dept?     @relation("UsersUnderDept", fields: [deptId], references: [id])
@@ -66,8 +67,10 @@ model student {
   sections section[] @relation("SectionsAssigned")
   marks    marking[] @relation("MarksObtainedByStudent")
 
+  userId    String
   deptId    String
   dept      dept     @relation("StudentsUnderDept", fields: [deptId], references: [id])
+  user      user     @relation("FacultAdvisor", fields: [userId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
