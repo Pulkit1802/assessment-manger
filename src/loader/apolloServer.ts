@@ -5,7 +5,7 @@ import { Server } from "http";
 import logger from "../utils/logger";
 import configs from "../config/config";
 
-const typeDefs = {}
+const typeDefs = ""
 const resolvers = {}
 
 export const buildApolloServer = async (httpServer: Server, serverOptions?: BaseContext) => {
