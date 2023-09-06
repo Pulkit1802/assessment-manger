@@ -35,3 +35,35 @@ export const prismaCreateMany = async (
         return res;
 
 }
+
+export const prismaFindUnique = async (
+    model: keyof PrismaClient,
+    where: any,
+    options: any
+    ) => {
+        
+        // @ts-ignore
+        const res = await prisma[model].findUnique({
+            where,
+            ...options
+        })
+
+        return res;
+
+}
+
+export const prismaFindMany = async (
+    model: keyof PrismaClient,
+    where: any,
+    options: any
+    ) => {
+
+        // @ts-ignore
+        const res = await prisma[model].findMany({
+            where,
+            ...options
+        })
+
+        return res;
+
+}
