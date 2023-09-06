@@ -5,8 +5,8 @@ import { buildApolloServer } from "./apolloServer";
 import helmet from "helmet";
 import morgan from "morgan";
 import cors from "cors";
-// import configs from "../configs/configs";
-// import logger from "../utils/logger";
+import configs from "../config/config";
+import logger from "../utils/logger";
 
 export default async ( { app }: { app: Application } ) : Promise<Server> => {
 
@@ -17,7 +17,7 @@ export default async ( { app }: { app: Application } ) : Promise<Server> => {
             credentials: true,
         }
     
-        // app.use(morgan(`${configs.NODE_ENV === "dev" ? "dev" : "tiny"}`));
+        // app.use(morgan(`${configs.env === "dev" ? "dev" : "tiny"}`));
         app.use(helmet());
         app.use(cors(corsOptions));
         app.use(json());
@@ -31,8 +31,8 @@ export default async ( { app }: { app: Application } ) : Promise<Server> => {
                 });
     
             } catch (error) {
-                // logger.error("Failed to check server health \n", error);
-                
+                logger.error("Failed to check server health \n", error);
+            
                 res.status(500).json({
                     message: "Not OK",
                 });
@@ -50,7 +50,7 @@ export default async ( { app }: { app: Application } ) : Promise<Server> => {
         return server;
 
     } catch (error) {
-        // logger.error("Failed to build Apollo Server \n", error);
+        logger.error("Failed to build Apollo Server \n", error);
         process.exit(1);
     }
 
