@@ -6,7 +6,7 @@ import { Server } from "http";
 import logger from "../utils/logger";
 import configs from "../config/config";
 
-export const buildApolloServer = async (httpServer: Server, serverOptions?: BaseContext) => {
+export const buildApolloServer = async (httpServer: Server, serverOptions?: BaseContext): Promise<ApolloServer> => {
 
     try {
         
@@ -17,8 +17,6 @@ export const buildApolloServer = async (httpServer: Server, serverOptions?: Base
             plugins: [ApolloServerPluginDrainHttpServer({httpServer})],
             ...serverOptions
         });
-
-        // logger.info("Apollo Server Setup Complete");
 
         return server
 
