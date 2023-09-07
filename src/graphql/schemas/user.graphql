@@ -14,7 +14,7 @@ type User {
 
 }
 
-type UserCreateInput {
+input UserCreateInput {
     name: String!
     email: String!
     password: String
@@ -23,7 +23,7 @@ type UserCreateInput {
     deptId: String!
 }
 
-type UserUpdateInput {
+input UserUpdateInput {
     name: String
     email: String
     password: String
@@ -32,7 +32,7 @@ type UserUpdateInput {
     deptId: String
 }
 
-type UserWhereInput {
+input UserWhereInput {
     id: ID,
     email: String,
     phoneNumber: String,

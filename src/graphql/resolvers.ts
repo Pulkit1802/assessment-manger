@@ -35,7 +35,7 @@ fieldsList.forEach((field) => {
     Field = {...Field, ...field}
 })
 
-console.log(Field);
+console.log(Mutation);
 
 const resolvers = {
     Query,
