@@ -107,12 +107,12 @@ model section {
   markings  marking[] @relation("MarksObtainedByStudent")
 
   courseId  String
-  userId    String
+  facultyId String
   programId String?
   course    course @relation("SectionsUnderCourse", fields: [courseId], references: [id]) 
-  user      user     @relation("SectionsTaught", fields: [userId], references: [id])
+  faculty   user     @relation("SectionsTaught", fields: [facultyId], references: [id])
   program   program? @relation("ProgramSections", fields: [programId], references: [id])
-  @@unique([courseId, userId, programId])
+  @@unique([courseId, facultyId, programId, batch, semester])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

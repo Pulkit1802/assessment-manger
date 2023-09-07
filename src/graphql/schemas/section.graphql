@@ -1,0 +1,43 @@
+type Section {
+    id: ID!
+    roomNo: String!
+    batch: String!
+    semester: Int!
+
+    students: [Student!]
+    reports: [Report!]
+    markings: [Marking!]
+    tests: [Test!]
+    faculty: User!
+    course: Course!
+    program: Program
+
+}
+
+input SectionCreateInput {
+    roomNo: String!
+    batch: String!
+    semester: Int!
+    facultyId: ID!
+    courseId: ID!
+    programId: ID
+}
+
+input SectionUpdateInput {
+    roomNo: String
+    batch: String
+    semester: Int
+    facultyId: ID
+    courseId: ID
+    programId: ID
+}
+
+input SectionWhereInput {
+    id: ID
+    roomNo: String
+    batch: String
+    semester: Int
+    facultyId: ID
+    courseId: ID
+    programId: ID
+}

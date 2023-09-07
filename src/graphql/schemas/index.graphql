@@ -20,6 +20,9 @@ type Query {
 
     course(where: CourseWhereInput): Course!
     courses(where: CourseWhereInput): [Course!]
+
+    section(where: SectionWhereInput): Section!
+    sections(where: SectionWhereInput): [Section!]
 }
 
 type Mutations {
@@ -43,5 +46,9 @@ type Mutations {
     createCourse(data: CourseCreateInput): Course!
     updateCourse(where: CourseWhereInput, data: CourseUpdateInput): Course!
     deleteCourse(where: CourseWhereInput): Course!
+
+    createSection(data: SectionCreateInput): Section!
+    updateSection(where: SectionWhereInput, data: SectionUpdateInput): Section!
+    deleteSection(where: SectionWhereInput): Section!
 
 }
