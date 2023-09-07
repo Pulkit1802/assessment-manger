@@ -210,7 +210,7 @@ model report {
   studentsFailed Int
   studentsAboveRequiredPercentage Int
 
-  questions questionReport[] @relation("QuestionWiseStats")
+  questionsReport questionReport[] @relation("QuestionWiseStats")
 
   testId    String
   courseId  String

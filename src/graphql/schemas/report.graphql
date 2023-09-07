@@ -1,0 +1,21 @@
+type Report {
+    id: ID!
+    name: String!
+    type: String!
+    objective: Int!
+    avgMarks: Float!
+    totalStudents: Int!
+    studentsPassed: Int!
+    studentsFailed: Int!
+    studentsAboveRequiredPercentage: Int!
+
+    questionsReport: [QuestionReport!]
+
+    section: Section!
+    course: Course!
+    program: Program!
+    test: Test!
+
+    students: [Student!]
+
+}

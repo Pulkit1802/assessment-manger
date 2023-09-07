@@ -1,0 +1,10 @@
+type questionReport {
+    id: String!
+    avgMarks: Float!
+    studentAttempted: Int!
+
+    question: Question!
+    report: Report!
+
+    student: [Student!]
+}
