@@ -1,0 +1,8 @@
+type questionMarks {
+    id: ID!
+    marksObtained: Float
+
+    student: Student!
+    question: Question!
+
+}

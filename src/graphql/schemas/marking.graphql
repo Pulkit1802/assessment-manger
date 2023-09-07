@@ -1,0 +1,12 @@
+type Marking {
+    id: ID!
+    totalMarksObtained: Float
+
+    questionWiseMarksObtained: [questionMarks!]
+
+    test: Test!
+    student: Student!
+    section: Section!
+    questions: [Question!]
+
+}

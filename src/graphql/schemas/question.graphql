@@ -1,0 +1,11 @@
+type Question {
+    id: ID!
+    name: String!
+    objective: String!
+    maxMarks: Int!
+    
+    marks: [questionMarks!]
+    questionReports: [questionReport!]
+    part: Part!
+
+}

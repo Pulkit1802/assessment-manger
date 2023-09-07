@@ -12,7 +12,7 @@ type Student {
 
     sections: [Section!]
     courses: [Course!]
-    marks: [Mark!]
+    marks: [Marking!]
 
 }
 

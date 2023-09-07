@@ -1,0 +1,11 @@
+type Part {
+    id: ID!
+    name: String!
+    maxQuestions: Int!
+    requiredQuestions: Int!
+    maxMarks:  Int!
+
+    questions: [Question!]
+    test: Test!
+    
+}

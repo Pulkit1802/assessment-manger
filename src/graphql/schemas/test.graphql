@@ -9,7 +9,7 @@ type Test {
     reports: [Report!]
     course: Course!
     section: Section!
-    testMarkings: [Mark!]
+    testMarkings: [Marking!]
 
 }
 
