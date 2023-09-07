@@ -1,6 +1,6 @@
-import exp from "constants";
 import configs from "../config/config";
 import { PrismaClient } from "@prisma/client";
+import { buildOptions } from "./prisma.utils";
 
 const { prisma } = configs;
 
@@ -10,6 +10,7 @@ export const prismaCreate = async (
     options: any
     ) => {
 
+        options = buildOptions(options);
         // @ts-ignore
         const res = await prisma[model].create({
             data,
@@ -25,7 +26,8 @@ export const prismaCreateMany = async (
     data: any,
     options: any
     ) => {
-            
+
+        options = buildOptions(options);
         // @ts-ignore
         const res = await prisma[model].createMany({
             data,
@@ -42,6 +44,7 @@ export const prismaFindUnique = async (
     options: any
     ) => {
         
+        options = buildOptions(options);
         // @ts-ignore
         const res = await prisma[model].findUnique({
             where,
@@ -58,6 +61,7 @@ export const prismaFindMany = async (
     options: any
     ) => {
 
+        options = buildOptions(options);
         // @ts-ignore
         const res = await prisma[model].findMany({
             where,
@@ -75,6 +79,7 @@ export const prismaUpdate = async (
     options: any
     ) => {
 
+        options = buildOptions(options);
         // @ts-ignore
         const res = await prisma[model].update({
             where,
@@ -92,15 +97,16 @@ export const prismaUpdateMany = async (
     data: any,
     options: any
     ) => {
-            
-            // @ts-ignore
-            const res = await prisma[model].updateMany({
-                where,
-                data,
-                ...options
-            })
-    
-            return res;
+
+        options = buildOptions(options);
+        // @ts-ignore
+        const res = await prisma[model].updateMany({
+            where,
+            data,
+            ...options
+        })
+
+        return res;
 
 }
 
@@ -110,8 +116,9 @@ export const prismaDelete = async (
     options: any
     ) => {
 
+        options = buildOptions(options);
         // @ts-ignore
-        const res = await prisma[model].delete({
+        await prisma[model].delete({
             where,
             ...options
         })
@@ -128,8 +135,9 @@ export const prismaDeleteMany = async (
     options: any
     ) => {
 
+        options = buildOptions(options);
         // @ts-ignore
-        const res = await prisma[model].deleteMany({
+        await prisma[model].deleteMany({
             where,
             ...options
         })

@@ -1,6 +1,7 @@
 import { readdirSync } from "fs";
+import { join } from "path";
 
-const dirs = readdirSync(__dirname+'./resolvers', {withFileTypes: true})
+const dirs = readdirSync(join(__dirname, "./resolvers"), {withFileTypes: true})
     .filter(dir => dir.isDirectory())
     .map(dir => dir.name)
 
@@ -9,10 +10,10 @@ const mutationsList : object[] = [];
 const fieldsList : object[] = [];
 
 dirs.forEach((dir) => {
-    const {queries} = require(`./${dir}/querry.ts`);
-    const {mutations} = require(`./${dir}/mutation.ts`);
-    const {fields} = require(`./${dir}/fields.ts`);
-    console.log(fields);
+    const {queries} = require(`./resolvers/${dir}/querry.ts`);
+    const {mutations} = require(`./resolvers/${dir}/mutation.ts`);
+    const {fields} = require(`./resolvers/${dir}/fields.ts`);
+
     queriesList.push(queries);
     mutationsList.push(mutations);
     fieldsList.push(fields);

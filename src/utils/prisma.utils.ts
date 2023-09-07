@@ -1,6 +1,6 @@
 type prismaSelectType = (string | object)[] | null;
 
-export const selectBuilder = (select: prismaSelectType) => {
+const selectBuilder = (select: prismaSelectType) => {
 
     if ( select === null ) 
         return null;
@@ -25,11 +25,33 @@ export const selectBuilder = (select: prismaSelectType) => {
     return selectObj;
 };
 
-export const includeBuilder = (include: prismaSelectType) => {
+const includeBuilder = (include: prismaSelectType) => {
 
     if ( include === null ) 
         return null;
 
     let includeObj = {};
+    include.forEach((field) => {
+        if ( typeof field === "string" ) {
+            // @ts-ignore
+            includeObj[field] = true;
+        } else {
+            for (const [key, value] of Object.entries(field)) {
+                // @ts-ignore
+                includeObj[key] = {
+                    'include': includeBuilder(value)
+                }
+            }
+        }
+    });
+
+}
+
+export const buildOptions = (options: any) => {
+
+    options.select = selectBuilder(options.select);
+    options.include = includeBuilder(options.include);
+
+    return options;
 
 }
