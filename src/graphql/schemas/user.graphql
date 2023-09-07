@@ -2,16 +2,40 @@ type User {
     id: ID!
     name: String!
     email: String!
-    password: String!
     phoneNumber: String!
     role: String!
 
-    dept: Department!
-    program: Program!
+    dept: Dept!
 
     cordinatedCourses: [Course!]
     sections: [Section!]
     students: [Student!]
     reports: [Report!]
 
+}
+
+type UserCreateInput {
+    name: String!
+    email: String!
+    password: String
+    phoneNumber: String!
+    role: String!
+    deptId: String!
+}
+
+type UserUpdateInput {
+    name: String
+    email: String
+    password: String
+    phoneNumber: String
+    role: String
+    deptId: String
+}
+
+type UserWhereInput {
+    id: ID,
+    email: String,
+    phoneNumber: String,
+    role: String,
+    deptId: String
 }

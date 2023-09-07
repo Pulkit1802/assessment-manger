@@ -1,6 +1,19 @@
+type Login {
+    token: String!
+    user: User!
+}
+
 type Query {
-    dept(id: ID!): Dept
-    depts: [Dept!]
+    login(email: String!, password: String!): Login!
+
+    dept(where: WhereDeptInput): Dept
+    depts(where: WhereDeptInput): [Dept!]
+
+    user(where: WhereUserInput): User
+    users(where: WhereUserInput): [User!]
+
+    program(where: WhereProgramInput): Program
+    programs(where: WhereProgramInput): [Program!]
 }
 
 type Mutations {
@@ -8,5 +21,13 @@ type Mutations {
     createDept(data: CreateDeptInput): Dept!
     updateDept(where: WhereDeptInput, data: UpdateDeptInput): Dept!
     deleteDept(where: WhereDeptInput): Dept!
+
+    createUser(data: CreateUserInput): User!
+    updateUser(where: WhereUserInput, data: UpdateUserInput): User!
+    deleteUser(where: WhereUserInput): User!
+
+    createProgram(data: CreateProgramInput): Program!
+    updateProgram(where: WhereProgramInput, data: UpdateProgramInput): Program!
+    deleteProgram(where: WhereProgramInput): Program!
 
 }

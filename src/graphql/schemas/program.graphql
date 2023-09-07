@@ -1,0 +1,27 @@
+type Program {
+    id: ID!
+    name: String!
+
+    courses: [Course!]
+    programSpecificCourses: [Course!]
+    reports: [Report!]
+    sections: [Section!]
+    students: [Student!]
+
+}
+
+input ProgramCreateInput {
+    name: String!
+    deptId: ID!
+}
+
+input ProgramUpdateInput {
+    name: String
+    deptId: ID
+}
+
+input ProgramWhereInput {
+    id: ID
+    name: String
+    deptId: ID
+}
