@@ -1,4 +1,4 @@
-type questionReport {
+type QuestionReport {
     id: String!
     avgMarks: Float!
     studentAttempted: Int!

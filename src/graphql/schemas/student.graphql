@@ -4,9 +4,9 @@ type Student {
     name: String!
     email: String!
     phoneNumber: String!
-    batch: Batch!
+    batch: String!
 
-    dept: Department!
+    dept: Dept!
     fa: User!
     teachers: [User!]
 

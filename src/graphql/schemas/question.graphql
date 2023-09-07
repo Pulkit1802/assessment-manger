@@ -5,7 +5,7 @@ type Question {
     maxMarks: Int!
     
     marks: [questionMarks!]
-    questionReports: [questionReport!]
+    questionReports: [QuestionReport!]
     part: Part!
 
 }

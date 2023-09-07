@@ -4,7 +4,7 @@ type Course {
 
     program: Program!
     dept: Dept!
-    cordinator: user!
+    cordinator: User!
 
     tests: [Test!]
     reports: [Report!]
