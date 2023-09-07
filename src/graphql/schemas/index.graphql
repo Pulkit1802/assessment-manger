@@ -1,0 +1,12 @@
+type Query {
+    dept(id: ID!): Dept
+    depts: [Dept!]
+}
+
+type Mutations {
+
+    createDept(data: CreateDeptInput): Dept!
+    updateDept(where: WhereDeptInput, data: UpdateDeptInput): Dept!
+    deleteDept(where: WhereDeptInput): Dept!
+
+}

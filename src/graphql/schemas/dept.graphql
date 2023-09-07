@@ -1,0 +1,26 @@
+type Dept {
+
+    id: ID!
+    name: String!
+    
+    users: [User!]
+    programs: [Program!]
+    courses: [Course!]
+    students: [Student!]
+    sections: [Section!]
+    reports: [Report!]
+
+}
+
+input WhereDeptInput {
+    id: ID
+    name: String
+}
+
+input CreateDeptInput {
+    name: String!
+}
+
+input UpdateDeptInput {
+    name: String!
+}

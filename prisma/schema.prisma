@@ -11,16 +11,16 @@ datasource db {
 }
 
 model dept {
-  id        String   @id  @default(uuid())
-  name      String
+  id        String    @id  @default(uuid())
+  name      String    @unique
 
-  users     user[]  @relation("UsersUnderDept")
-  courses   course[] @relation("CoursesUnderDept")
+  users     user[]    @relation("UsersUnderDept")
+  courses   course[]  @relation("CoursesUnderDept")
   students  student[] @relation("StudentsUnderDept")
   programs  program[] @relation("ProgramsUnderDept")
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 }
 
 model program {
@@ -29,6 +29,7 @@ model program {
 
   programSpecificCourses course[] @relation("ProgramSpecificCourses")
   reports   report[] @relation("ProgramReports")
+  sections  section[] @relation("ProgramSections")
 
   deptId    String
   dept      dept     @relation("ProgramsUnderDept", fields: [deptId], references: [id])
@@ -108,9 +109,11 @@ model section {
 
   courseId  String
   userId    String
+  programId String?
   course    course @relation("SectionsUnderCourse", fields: [courseId], references: [id]) 
   user      user     @relation("SectionsTaught", fields: [userId], references: [id])
-  @@unique([courseId, userId])
+  program   program? @relation("ProgramSections", fields: [programId], references: [id])
+  @@unique([courseId, userId, programId])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

@@ -1,0 +1,17 @@
+type User {
+    id: ID!
+    name: String!
+    email: String!
+    password: String!
+    phoneNumber: String!
+    role: String!
+
+    dept: Department!
+    program: Program!
+
+    cordinatedCourses: [Course!]
+    sections: [Section!]
+    students: [Student!]
+    reports: [Report!]
+
+}
