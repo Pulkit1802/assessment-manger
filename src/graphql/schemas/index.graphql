@@ -23,6 +23,9 @@ type Query {
 
     section(where: SectionWhereInput): Section!
     sections(where: SectionWhereInput): [Section!]
+
+    test(where: TestWhereInput): Test!
+    tests(where: TestWhereInput): [Test!]
 }
 
 type Mutations {
@@ -50,5 +53,9 @@ type Mutations {
     createSection(data: SectionCreateInput): Section!
     updateSection(where: SectionWhereInput, data: SectionUpdateInput): Section!
     deleteSection(where: SectionWhereInput): Section!
+
+    createTest(data: TestCreateInput): Test!
+    updateTest(where: TestWhereInput, data: TestUpdateInput): Test!
+    deleteTest(where: TestWhereInput): Test!
 
 }

@@ -1,0 +1,34 @@
+type Test {
+    id: ID!
+    name: String!
+    requiredPercentage: Float!
+    maxMarks: Int!
+
+    parts: [Part!]
+    questions: [Question!]
+    reports: [Report!]
+    course: Course!
+    section: Section!
+    testMarkings: [Mark!]
+
+}
+
+input TestCreateInput {
+    name: String!
+    requiredPercentage: Float!
+    maxMarks: Int!
+    courseId: ID!
+}
+
+input TestUpdateInput {
+    name: String
+    requiredPercentage: Float
+    maxMarks: Int
+    courseId: ID
+}
+
+input TestWhereInput {
+    id: ID
+    courseId: ID
+    name: String
+}
