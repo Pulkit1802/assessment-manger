@@ -1,0 +1,46 @@
+type Student {
+    id: ID!
+    regNo: String!
+    name: String!
+    email: String!
+    phoneNumber: String!
+    batch: Batch!
+
+    dept: Department!
+    fa: User!
+    teachers: [User!]
+
+    sections: [Section!]
+    courses: [Course!]
+    marks: [Mark!]
+
+}
+
+input StudentCreateInput {
+    regNo: String!
+    name: String!
+    email: String!
+    phoneNumber: String!
+    batch: String!
+
+    deptId: ID!
+    faId: ID!
+}
+
+input StudentWhereInput {
+    id: ID
+    regNo: String
+    email: String
+    phoneNumber: String
+}
+
+input StudentUpdateInput {
+    regNo: String
+    name: String
+    email: String
+    phoneNumber: String
+    batch: String
+
+    deptId: ID
+    faId: ID
+}

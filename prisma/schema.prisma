@@ -68,10 +68,10 @@ model student {
   sections section[] @relation("SectionsAssigned")
   marks    marking[] @relation("MarksObtainedByStudent")
 
-  userId    String
+  faId    String
   deptId    String
   dept      dept     @relation("StudentsUnderDept", fields: [deptId], references: [id])
-  user      user     @relation("FacultAdvisor", fields: [userId], references: [id])
+  fa        user     @relation("FacultAdvisor", fields: [faId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -80,7 +80,6 @@ model student {
 model course {
   id        String   @id  @default(uuid())
   name      String
-  type      String
 
   sections  section[] @relation("SectionsUnderCourse")
   tests     test[]    @relation("TestsUnderCourse")

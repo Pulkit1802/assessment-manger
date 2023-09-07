@@ -1,0 +1,33 @@
+type Course {
+    id: ID!
+    name: String!
+
+    program: Program!
+    dept: Dept!
+    cordinator: user!
+
+    tests: [Test!]
+    reports: [Report!]
+    students: [Student!]
+    users: [User!]
+
+}
+
+input CourseCreateInput {
+    name: String!
+    programId: ID!
+    deptId: ID!
+}
+
+input CourseUpdateInput {
+    name: String
+    programId: ID
+    deptId: ID
+}
+
+input CourseWhereInput {
+    id: ID
+    name: String
+    programId: ID
+    deptId: ID
+}

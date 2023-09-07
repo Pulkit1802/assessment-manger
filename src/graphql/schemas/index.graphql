@@ -6,28 +6,42 @@ type Login {
 type Query {
     login(email: String!, password: String!): Login!
 
-    dept(where: WhereDeptInput): Dept
-    depts(where: WhereDeptInput): [Dept!]
+    dept(where: DeptWhereInput): Dept
+    depts(where: DeptWhereInput): [Dept!]
 
-    user(where: WhereUserInput): User
-    users(where: WhereUserInput): [User!]
+    user(where: UserWhereInput): User
+    users(where: UserWhereInput): [User!]
 
-    program(where: WhereProgramInput): Program
-    programs(where: WhereProgramInput): [Program!]
+    program(where: ProgramWhereInput): Program!
+    programs(where: ProgramWhereInput): [Program!]
+
+    student(where: StudentWhereInput): Student!
+    students(where: StudentWhereInput): [Student!]
+
+    course(where: CourseWhereInput): Course!
+    courses(where: CourseWhereInput): [Course!]
 }
 
 type Mutations {
 
-    createDept(data: CreateDeptInput): Dept!
-    updateDept(where: WhereDeptInput, data: UpdateDeptInput): Dept!
-    deleteDept(where: WhereDeptInput): Dept!
+    createDept(data: DeptCreateInput): Dept!
+    updateDept(where: DeptWhereInput, data: DeptUpdateInput): Dept!
+    deleteDept(where: DeptWhereInput): Dept!
 
-    createUser(data: CreateUserInput): User!
-    updateUser(where: WhereUserInput, data: UpdateUserInput): User!
-    deleteUser(where: WhereUserInput): User!
+    createUser(data: UserCreateInput): User!
+    updateUser(where: UserWhereInput, data: UserUpdateInput): User!
+    deleteUser(where: UserWhereInput): User!
 
-    createProgram(data: CreateProgramInput): Program!
-    updateProgram(where: WhereProgramInput, data: UpdateProgramInput): Program!
-    deleteProgram(where: WhereProgramInput): Program!
+    createProgram(data: ProgramCreateInput): Program!
+    updateProgram(where: ProgramWhereInput, data: ProgramUpdateInput): Program!
+    deleteProgram(where: ProgramWhereInput): Program!
+
+    createStudent(data: StudentCreateInput): Student!
+    updateStudent(where: StudentWhereInput, data: StudentUpdateInput): Student!
+    deleteStudent(where: StudentWhereInput): Student!
+
+    createCourse(data: CourseCreateInput): Course!
+    updateCourse(where: CourseWhereInput, data: CourseUpdateInput): Course!
+    deleteCourse(where: CourseWhereInput): Course!
 
 }

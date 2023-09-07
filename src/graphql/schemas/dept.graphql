@@ -12,15 +12,15 @@ type Dept {
 
 }
 
-input WhereDeptInput {
+input DeptWhereInput {
     id: ID
     name: String
 }
 
-input CreateDeptInput {
+input DeptCreateInput {
     name: String!
 }
 
-input UpdateDeptInput {
+input DeptUpdateInput {
     name: String!
 }
