@@ -38,17 +38,19 @@ type Mutation {
     updateUser(where: UserWhereInput, data: UserUpdateInput): User!
     deleteUser(where: UserWhereInput): User!
 
-    createProgram(data: ProgramCreateInput): Program!
+    createProgram(data: ProgramCreateInput, mapData: ProgramCourseMapInput): Program!
     updateProgram(where: ProgramWhereInput, data: ProgramUpdateInput): Program!
     deleteProgram(where: ProgramWhereInput): Program!
+    attachCourses(where: ProgramWhereInput, mapData: ProgramCourseMapInput): Program!
 
     createStudent(data: StudentCreateInput): Student!
     updateStudent(where: StudentWhereInput, data: StudentUpdateInput): Student!
     deleteStudent(where: StudentWhereInput): Student!
 
-    createCourse(data: CourseCreateInput): Course!
+    createCourse(data: CourseCreateInput, mapData: CourseProgramMapInput): Course!
     updateCourse(where: CourseWhereInput, data: CourseUpdateInput): Course!
     deleteCourse(where: CourseWhereInput): Course!
+    attachPrograms(where: CourseWhereInput, mapData: CourseProgramMapInput): Course!
 
     createSection(data: SectionCreateInput): Section!
     updateSection(where: SectionWhereInput, data: SectionUpdateInput): Section!

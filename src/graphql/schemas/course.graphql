@@ -24,6 +24,10 @@ input CourseUpdateInput {
     deptId: ID
 }
 
+input CourseProgramMapInput {
+    programIds: [String]
+}
+
 input CourseWhereInput {
     id: ID
     name: String
