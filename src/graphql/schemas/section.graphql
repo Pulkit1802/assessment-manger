@@ -24,7 +24,7 @@ input SectionCreateInput {
     programId: ID!
 }
 
-input SectionAddStudentInput {
+input SectionStudentMapInput {
     studentIds: [ID!]
 }
 

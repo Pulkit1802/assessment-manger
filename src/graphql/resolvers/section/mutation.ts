@@ -21,12 +21,31 @@ export const mutations = {
 
         return section;
     },
-    
+
     deleteSection: async (_: any, args: any) => {
         const {where} = args;
 
         const section = prisma.section.delete({
             where
+        });
+
+        return section;
+    },
+
+    attachStudents: async (_: any, args: any) => {
+        const {where, mapData} = args;
+
+        const section = prisma.section.update({
+            where,
+            data: {
+                students: {
+                    connect: mapData.studentIds.map((id: any) => {
+                        return {
+                            id
+                        }
+                    })
+                }
+            }
         });
 
         return section;

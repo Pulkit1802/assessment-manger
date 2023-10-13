@@ -46,6 +46,7 @@ type Mutation {
     createStudent(data: StudentCreateInput): Student!
     updateStudent(where: StudentWhereInput, data: StudentUpdateInput): Student!
     deleteStudent(where: StudentWhereInput): Student!
+    attachSections(where: StudentWhereInput, mapData: StudentSectionMapInput): Student!
 
     createCourse(data: CourseCreateInput, mapData: CourseProgramMapInput): Course!
     updateCourse(where: CourseWhereInput, data: CourseUpdateInput): Course!
@@ -55,6 +56,7 @@ type Mutation {
     createSection(data: SectionCreateInput): Section!
     updateSection(where: SectionWhereInput, data: SectionUpdateInput): Section!
     deleteSection(where: SectionWhereInput): Section!
+    attachStudents(where: SectionWhereInput, mapData: SectionStudentMapInput): Section!
 
     createTest(data: TestCreateInput): Test!
     updateTest(where: TestWhereInput, data: TestUpdateInput): Test!
