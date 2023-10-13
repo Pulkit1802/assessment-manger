@@ -5,7 +5,7 @@ import { buildApolloServer } from "./apolloServer";
 import helmet from "helmet";
 import morgan from "morgan";
 import cors from "cors";
-import configs from "../config/config";
+import configs from "../config";
 import logger from "../utils/logger";
 
 export default async ( { app }: { app: Application } ) : Promise<Server> => {

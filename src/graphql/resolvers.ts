@@ -10,7 +10,7 @@ const mutationsList : object[] = [];
 const fieldsList : object[] = [];
 
 dirs.forEach((dir) => {
-    const {queries} = require(`./resolvers/${dir}/querry.ts`);
+    const {queries} = require(`./resolvers/${dir}/query.ts`);
     const {mutations} = require(`./resolvers/${dir}/mutation.ts`);
     const {fields} = require(`./resolvers/${dir}/fields.ts`);
 

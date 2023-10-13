@@ -5,7 +5,6 @@ type Dept {
     
     users: [User!]
     programs: [Program!]
-    courses: [Course!]
     students: [Student!]
     sections: [Section!]
     reports: [Report!]

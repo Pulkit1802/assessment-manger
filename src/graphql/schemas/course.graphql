@@ -3,7 +3,6 @@ type Course {
     name: String!
 
     program: Program!
-    dept: Dept!
     cordinator: User!
 
     tests: [Test!]

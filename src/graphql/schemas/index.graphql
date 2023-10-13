@@ -28,7 +28,7 @@ type Query {
     tests(where: TestWhereInput): [Test!]
 }
 
-type Mutations {
+type Mutation {
 
     createDept(data: DeptCreateInput): Dept!
     updateDept(where: DeptWhereInput, data: DeptUpdateInput): Dept!

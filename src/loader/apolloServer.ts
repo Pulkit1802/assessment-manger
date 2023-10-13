@@ -4,7 +4,7 @@ import { BaseContext } from "@apollo/server";
 import { typeDefs, resolvers } from "../graphql";
 import { Server } from "http";
 import logger from "../utils/logger";
-import configs from "../config/config";
+import configs from "../config";
 
 export const buildApolloServer = async (httpServer: Server, serverOptions?: BaseContext): Promise<ApolloServer> => {
 

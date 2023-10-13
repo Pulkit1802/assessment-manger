@@ -2,7 +2,7 @@ import { Server } from "http";
 import express, {Application} from "express";
 import loader from "./loader";
 import logger from "./utils/logger";
-import configs from "./config/config";
+import configs from "./config";
 
 process.on("uncaughtException", (error) => {
     logger.error("Uncaught Exception: \n", error);

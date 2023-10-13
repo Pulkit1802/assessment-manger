@@ -8,6 +8,7 @@ type User {
     dept: Dept!
 
     cordinatedCourses: [Course!]
+    cordinatedPrograms: [Program!]
     sections: [Section!]
     students: [Student!]
     reports: [Report!]
@@ -20,7 +21,7 @@ input UserCreateInput {
     password: String
     phoneNumber: String!
     role: String!
-    deptId: String!
+    deptId: String
 }
 
 input UserUpdateInput {
