@@ -28,6 +28,8 @@ export const mutations = {
             });
         }
 
+        return course;
+
     },
     updateCourse: async (_: any, args: any) => {
         const { data, where } = args;

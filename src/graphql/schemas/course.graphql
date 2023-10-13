@@ -1,8 +1,9 @@
 type Course {
     id: ID!
     name: String!
+    code: String
 
-    program: Program!
+    program: [Program!]
     cordinator: User!
 
     tests: [Test!]
@@ -14,8 +15,8 @@ type Course {
 
 input CourseCreateInput {
     name: String!
-    programId: ID!
-    deptId: ID!
+    code: String!
+    cordinatorId: String!
 }
 
 input CourseUpdateInput {

@@ -28,6 +28,8 @@ export  const mutations = {
             })
         }
 
+        return program;
+
     },
     updateProgram: async (_: any, args: any) => {
         const { data, where } = args;
@@ -60,6 +62,8 @@ export  const mutations = {
                 }
             }
         });
+
+        return program;
 
     }
 }

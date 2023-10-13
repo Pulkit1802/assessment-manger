@@ -2,7 +2,7 @@ type Program {
     id: ID!
     name: String!
 
-    courses: [Course!]
+    programCourses: [Course!]
     reports: [Report!]
     sections: [Section!]
     students: [Student!]
@@ -12,6 +12,7 @@ type Program {
 input ProgramCreateInput {
     name: String!
     deptId: ID!
+    cordinatorId: ID!
 }
 
 input ProgramCourseMapInput {
