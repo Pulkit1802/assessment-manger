@@ -3,6 +3,7 @@ type Section {
     roomNo: String!
     batch: String!
     semester: Int!
+    completed: Boolean!
 
     students: [Student!]
     reports: [Report!]
@@ -10,7 +11,7 @@ type Section {
     tests: [Test!]
     faculty: User!
     course: Course!
-    program: Program
+    program: Program!
 
 }
 
@@ -20,7 +21,11 @@ input SectionCreateInput {
     semester: Int!
     facultyId: ID!
     courseId: ID!
-    programId: ID
+    programId: ID!
+}
+
+input SectionAddStudentInput {
+    studentIds: [ID!]
 }
 
 input SectionUpdateInput {
