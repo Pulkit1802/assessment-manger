@@ -11,11 +11,10 @@ datasource db {
 }
 
 model dept {
-  id        String    @id  @default(uuid())
+  id        String    @id  @default(cuid())
   name      String    @unique
 
   users     user[]    @relation("UsersUnderDept")
-  courses   course[]  @relation("CoursesUnderDept")
   students  student[] @relation("StudentsUnderDept")
   programs  program[] @relation("ProgramsUnderDept")
 
@@ -24,22 +23,24 @@ model dept {
 }
 
 model program {
-  id        String   @id  @default(uuid())
+  id        String   @id  @default(cuid())
   name      String
 
-  programSpecificCourses course[] @relation("ProgramSpecificCourses")
+  programCourses course[] @relation("CoursesOfferedInProgram")
   reports   report[] @relation("ProgramReports")
   sections  section[] @relation("ProgramSections")
 
   deptId    String
+  cordinatorId String
   dept      dept     @relation("ProgramsUnderDept", fields: [deptId], references: [id])
+  cordinator user     @relation("ProgramCordinated", fields: [cordinatorId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
 model user {
-  id        String   @id  @default(uuid())
+  id        String   @id  @default(cuid())
   email     String   @unique
   password  String
   name      String
@@ -47,6 +48,7 @@ model user {
   role      String
 
   cordinatedCourses course[] @relation("CourseCordinated")
+  cordinatedPrograms program[] @relation("ProgramCordinated")
   sections  section[] @relation("SectionsTaught")
   students  student[] @relation("FacultAdvisor")
 
@@ -58,7 +60,7 @@ model user {
 }
 
 model student {
-  id        String   @id  @default(uuid())
+  id        String   @id  @default(cuid())
   regNo     String   @unique
   name      String
   phoneNumber String
@@ -78,18 +80,17 @@ model student {
 }
 
 model course {
-  id        String   @id  @default(uuid())
+  id        String   @id  @default(cuid())
   name      String
+  code      String   @unique
 
   sections  section[] @relation("SectionsUnderCourse")
   tests     test[]    @relation("TestsUnderCourse")
   reports   report[]  @relation("CourseReports")
 
-  deptId    String
   cordinatorId String
-  programId String?
-  program   program? @relation("ProgramSpecificCourses", fields: [programId], references: [id])
-  dept      dept @relation("CoursesUnderDept", fields: [deptId], references: [id])
+
+  program   program[] @relation("CoursesOfferedInProgram")
   cordinator user @relation("CourseCordinated", fields: [cordinatorId], references: [id])
 
   createdAt DateTime @default(now())
@@ -97,10 +98,11 @@ model course {
 }
 
 model section {
-  id        String   @id  @default(uuid())
+  id        String   @id  @default(cuid())
   roomNo    String
   batch     String
   semester  Int
+  completed Boolean @default(false)
 
   students  student[] @relation("SectionsAssigned")
   reports   report[]  @relation("SectionReports")
@@ -108,10 +110,10 @@ model section {
 
   courseId  String
   facultyId String
-  programId String?
+  programId String
   course    course @relation("SectionsUnderCourse", fields: [courseId], references: [id]) 
   faculty   user     @relation("SectionsTaught", fields: [facultyId], references: [id])
-  program   program? @relation("ProgramSections", fields: [programId], references: [id])
+  program   program @relation("ProgramSections", fields: [programId], references: [id])
   @@unique([courseId, facultyId, programId, batch, semester])
 
   createdAt DateTime @default(now())
@@ -119,10 +121,11 @@ model section {
 }
 
 model test {
-  id        String   @id  @default(uuid())
+  id        String   @id  @default(cuid())
   name      String
   requiredPercentage Float
   maxMarks  Int
+  markUploadDeadline DateTime
 
   parts     part[]  @relation("TestParts")
   reports   report[]  @relation("TestReports")
@@ -136,7 +139,7 @@ model test {
 }
 
 model part {
-  id        String   @id  @default(uuid())
+  id        String   @id  @default(cuid())
   name      String
   maxQuestions Int
   requiredQuestions Int
@@ -152,7 +155,7 @@ model part {
 }
 
 model question {
-  id        String   @id  @default(uuid())
+  id        String   @id  @default(cuid())
   name      String
   objective Int
   maxMarks  Int
@@ -169,7 +172,7 @@ model question {
 }
 
 model marking {
-  id        String   @id  @default(uuid())
+  id        String   @id  @default(cuid())
   totalMarksObtained     Float
   questionWiseMarksObtained questionMarking[] @relation("MarksObtainedOnQuestion")
 
@@ -186,7 +189,7 @@ model marking {
 }
 
 model questionMarking {
-  id        String   @id  @default(uuid())
+  id        String   @id  @default(cuid())
   marksObtained     Float
 
   questionId     String
@@ -200,7 +203,7 @@ model questionMarking {
 }
 
 model report {
-  id        String   @id  @default(uuid())
+  id        String   @id  @default(cuid())
   name      String
   type      String
   objective Int
@@ -213,20 +216,20 @@ model report {
   questionsReport questionReport[] @relation("QuestionWiseStats")
 
   testId    String
-  courseId  String
+  courseId  String?
   sectionId String?
   programId String?
+  test      test @relation("TestReports", fields: [testId], references: [id])
   section   section? @relation("SectionReports", fields: [sectionId], references: [id])
   program   program? @relation("ProgramReports", fields: [programId], references: [id])
-  test      test @relation("TestReports", fields: [testId], references: [id])
-  course    course @relation("CourseReports", fields: [courseId], references: [id])
+  course    course? @relation("CourseReports", fields: [courseId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
 model questionReport {
-  id        String   @id  @default(uuid())
+  id        String   @id  @default(cuid())
   avgMarks  Float
   studentsAttempted Int
 
