@@ -2,7 +2,7 @@ import Header from '../components/auth/header';
 import Signup from '../components/auth/signup';
 import Navbar from '../components/shared/navbar';
 
-export default function signin() {
+export default function signup() {
 	return (
 		<div className="h-screen">
 			<div className="absolute top-0 w-full">
@@ -13,7 +13,7 @@ export default function signin() {
 					heading="Signup to create an account"
 					paragraph="Already have an account? "
 					linkName="Login"
-					linkUrl="/"
+					linkUrl="/signin"
 				/>
 				<Signup />
 			</div>
