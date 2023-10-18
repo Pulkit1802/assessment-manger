@@ -9,3 +9,11 @@ type Part {
     test: Test!
     
 }
+
+input PartCreateInput {
+    name: String!
+    maxQuestions: Int!
+    requiredQuestions: Int!
+    maxMarks:  Int!
+    questions: [QuestionCreateInput!]
+}

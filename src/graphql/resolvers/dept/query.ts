@@ -3,7 +3,7 @@ import { prisma } from "../../../config";
 
 export const queries = {
     dept: async (_: any, args: any) => {
-        const {where} = args;
+        const where = args?.where || {};
 
         const dept = prisma.dept.findFirst({
             where,
@@ -20,7 +20,7 @@ export const queries = {
     },
     
     depts: async (_: any, args: any) => {
-        const {where} = args;
+        const where = args?.where || {};
 
         const depts = prisma.dept.findMany({
             where,

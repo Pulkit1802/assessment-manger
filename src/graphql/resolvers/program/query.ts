@@ -20,11 +20,12 @@ export const queries = {
         return program;
 
     },
+
     programs: async (_: any, args: any) => {
-        const {where} = args || {};
+        const where = args?.where || {};
 
         const programs = prisma.program.findMany({
-            where,
+            where: {},
             include: {
                 dept: true,
                 programCourses: true,

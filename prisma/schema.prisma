@@ -125,6 +125,7 @@ model test {
   name      String
   requiredPercentage Float
   maxMarks  Int
+  totalParts Int
   markUploadDeadline DateTime
 
   parts     part[]  @relation("TestParts")
@@ -146,6 +147,7 @@ model part {
   maxMarks  Int
 
   questions question[]  @relation("TestQuestions")
+  marks     questionMarking[] @relation("MarksObtainedOnQuestion")
 
   testId    String
   test      test @relation("TestParts", fields: [testId], references: [id])
@@ -194,8 +196,10 @@ model questionMarking {
 
   questionId     String
   markingId    String
+  partId      String
   question   question @relation("MarksObtainedOnQuestion", fields: [questionId], references: [id])
   marking   marking @relation("MarksObtainedOnQuestion", fields: [markingId], references: [id])
+  part      part    @relation("MarksObtainedOnQuestion", fields: [partId], references: [id])
   @@unique([questionId, markingId])
 
   createdAt DateTime @default(now())
