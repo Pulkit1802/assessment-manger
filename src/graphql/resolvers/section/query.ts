@@ -7,14 +7,6 @@ export const queries = {
 
         const section = prisma.section.findFirst({
             where,
-            include: {
-                students: true,
-                course: true,
-                faculty: true,
-                markings: true,
-                program: true,
-                reports: true,
-            }
         });
 
         if (!section) throw new ApiError(404, "Section not found");
@@ -27,14 +19,6 @@ export const queries = {
 
         const sections = prisma.section.findMany({
             where,
-            include: {
-                students: true,
-                course: true,
-                faculty: true,
-                markings: true,
-                program: true,
-                reports: true,
-            }
         });
 
         return sections;

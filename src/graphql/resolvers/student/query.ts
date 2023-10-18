@@ -7,12 +7,6 @@ export const queries = {
 
         const student = prisma.student.findFirst({
             where,
-            include: {
-                sections: true,
-                fa: true,
-                dept: true,
-                marks: true
-            }
         });
 
         if (!student) throw new ApiError(404, "Student not found");
@@ -26,12 +20,6 @@ export const queries = {
 
         const students = prisma.student.findMany({
             where,
-            include: {
-                sections: true,
-                fa: true,
-                dept: true,
-                marks: true
-            }
         });
 
         return students;
