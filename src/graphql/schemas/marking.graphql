@@ -10,3 +10,10 @@ type Marking {
     questions: [Question!]
 
 }
+
+input MarkingCreateInput {
+    studentId: ID!
+    testId: ID!
+    sectionId: ID!
+    questionMarks: [QuestionMarksInput!]
+}

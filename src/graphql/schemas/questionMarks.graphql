@@ -6,3 +6,9 @@ type questionMarks {
     question: Question!
 
 }
+
+input QuestionMarksInput {
+    marksObtained: Float
+    partId: ID!
+    questionId: ID!
+}
