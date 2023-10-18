@@ -24,13 +24,14 @@ export const fields = {
             });
         },
         students: async (parent: any, _: any) => {
-            return await prisma.section.findFirst({
+            return await prisma.student.findFirst({
                 where: {
-                    id: parent.id
+                    sections: {
+                        some: {
+                            id: parent.id
+                        }
+                    }
                 },
-                select: {
-                    students: true
-                }
             });
         }
     }

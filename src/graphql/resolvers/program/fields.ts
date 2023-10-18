@@ -17,23 +17,25 @@ export const fields = {
             });
         },
         students: async (parent: any, _: any) => {
-            return await prisma.section.findMany({
+            return await prisma.student.findMany({
                 where: {
-                    programId: parent.id
+                    sections: {
+                        some: {
+                            programId: parent.id
+                        }
+                    }
                 },
-                select: {
-                    students: true
-                }
             });
         },
         programCourses: async (parent: any, _: any) => {
-            return await prisma.program.findFirst({
+            return await prisma.course.findMany({
                 where: {
-                    id: parent.id
+                    program: {
+                        some: {
+                            id: parent.id
+                        }
+                    }
                 },
-                select: {
-                    programCourses: true
-                }
             });
         }
     }

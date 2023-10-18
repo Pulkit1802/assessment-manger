@@ -28,7 +28,7 @@ export const fields = {
             });
         },
         courses: async (parent: any, _: any) => {
-            return await prisma.section.findMany({
+            const section = await prisma.section.findMany({
                 where: {
                     students: {
                         some: {
@@ -40,6 +40,11 @@ export const fields = {
                     course: true
                 }
             });
+
+            if (!section) return [];
+
+            return section.map((s: any) => s.course);
+
         },
         teachers: async (parent: any, _: any) => {
             return await prisma.section.findMany({

@@ -5,7 +5,7 @@ type User {
     phoneNumber: String!
     role: String!
 
-    dept: Dept!
+    dept: Dept
 
     cordinatedCourses: [Course!]
     cordinatedPrograms: [Program!]

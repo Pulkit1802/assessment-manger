@@ -22,10 +22,13 @@ export const queries = {
     },
     users: async (_:any, args: any) => {
         
-            const { where } = args;
+        const { where } = args;
 
         return await prisma.user.findMany({
-            where
+            where,
+            include: {
+                dept: true,
+            }
         });
     },
     login: async (_: any, args: any) => {

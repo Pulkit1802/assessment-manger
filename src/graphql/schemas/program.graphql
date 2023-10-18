@@ -2,7 +2,7 @@ type Program {
     id: ID!
     name: String!
 
-    programCourses: [Course!]
+    programCourses: [Course]
     dept: Dept!
     reports: [Report!]
     sections: [Section!]

@@ -35,6 +35,8 @@ model program {
   dept      dept     @relation("ProgramsUnderDept", fields: [deptId], references: [id])
   cordinator user     @relation("ProgramCordinated", fields: [cordinatorId], references: [id])
 
+  @@unique([deptId, name])
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

@@ -3,34 +3,32 @@ import { prisma } from "../../../config";
 export const fields = {
     Course: {
         program: async (parent: any, _: any) => {
-            return await prisma.course.findMany({
+            return await prisma.program.findMany({
                 where: {
-                    id: parent.id
+                    programCourses: {
+                        some: {
+                            id: parent.id
+                        }
+                    }
                 },
-                select: {
-                    program: true
-                }
             });
         },
-        sections: async (parent: any, _: any) => {
-            return await prisma.section.findMany({
-                where: {
-                    courseId: parent.id
-                }
-            });
-        },
+        // sections: async (parent: any, _: any) => {
+        //     return await prisma.section.findMany({
+        //         where: {
+        //             courseId: parent.id
+        //         }
+        //     });
+        // },
         cordinator: async (parent: any, _: any) => {
-            return await prisma.course.findUnique({
+            return await prisma.user.findUnique({
                 where: {
-                    id: parent.id
-                },
-                select: {
-                    cordinator: true
+                    id: parent.cordinatorId
                 }
             });
         },
         students: async (parent: any, _: any) => {
-            return await prisma.section.findMany({
+            const sections = await prisma.section.findMany({
                 where: {
                     courseId: parent.id
                 },
@@ -38,9 +36,14 @@ export const fields = {
                     students: true
                 }
             });
+
+            if (!sections) return [];
+
+            return sections.map((s: any) => s.students);
+
         },
         users: async (parent: any, _: any) => {
-            return await prisma.section.findMany({
+            const sections = await prisma.section.findMany({
                 where: {
                     courseId: parent.id
                 },
@@ -48,6 +51,10 @@ export const fields = {
                     faculty: true
                 }
             });
+
+            if (!sections) return [];
+
+            return sections.map((s: any) => s.faculty);
         }
     }
 }

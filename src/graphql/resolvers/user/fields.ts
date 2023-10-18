@@ -3,11 +3,14 @@ import { prisma } from '../../../config'
 export const fields = {
     User: {
         dept: async (parent: any, _: any) => {
-            return await prisma.dept.findFirst({
-                where: {
-                    id: parent.deptId
-                }
-            });
+            if (parent.deptId)
+                return await prisma.dept.findUnique({
+                    where: {
+                        id: parent.deptId
+                    }
+                });
+            else
+                return null;
         },
         cordinatedCourses: async (parent: any, _: any) => {
             return await prisma.course.findMany({
