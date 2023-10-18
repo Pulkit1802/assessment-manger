@@ -5,66 +5,40 @@ export const mutations = {
     createTest:async (_: any, args: any) => {
         const {data} = args;
         const {parts} = data;
+
         if (parts.length != data.totalParts)
-            throw new ApiError(400, "Invalid total part");
+            throw new ApiError(400, "Parts count mismatch");
 
         // TODO: Make changes to creation in single query
-
-        const testData = data;
-        delete testData.parts;
-        delete testData.totalParts;
-
-        const date = new Date();
+        // @ts-ignore
+        delete data.parts;
 
         const test = await prisma.test.create({
-            data: {
-                ...testData,
-                markUploadDeadline: date.toISOString(),
-            }
-        });
-        
-        parts.forEach(async (partData: any) => {
-            const {questions} = partData;
-
-            if (questions.length != partData.maxQuestions)
-                throw new ApiError(400, "Invalid total question");
-
-            delete partData.questions;
-            const part = await prisma.part.create({
-                data: {
-                    testId: test.id,
-                    ...partData,
+            data:{
+                ...data,
+                parts:{
+                    create: parts.map((part: any) => {
+                        const { questions } = part;
+                        // @ts-ignore
+                        delete part.questions;
+                        return {
+                            ...part,
+                            questions:{
+                                create: questions
+                            }
+                        }
+                    })
                 }
-            });
-
-            const questionData = questions.map((question: any) => {
-                return {
-                    ...question,
-                    partId: part.id,
-                }
-            });
-
-            await prisma.question.createMany({
-                data: questionData,
-            });
-
-        });
-
-        return await prisma.test.findFirst({
-            where: {
-                id: test.id
             },
-            include: {
-                course: true,
-                parts: {
-                    include: {
-                        questions: true,
+            include:{
+                parts:{
+                    include:{
+                        questions:true
                     }
-                },
-                reports: true,
-                testMarkings: true,
+                }
             }
         });
 
+        return test;
     }
 }
