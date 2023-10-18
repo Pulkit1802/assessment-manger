@@ -27,13 +27,12 @@ export const fields = {
             });
         },
         programCourses: async (parent: any, _: any) => {
-            return await prisma.course.findMany({
+            return await prisma.program.findFirst({
                 where: {
-                    program: {
-                        some: {
-                            id: parent.id,
-                        }
-                    }
+                    id: parent.id
+                },
+                select: {
+                    programCourses: true
                 }
             });
         }
