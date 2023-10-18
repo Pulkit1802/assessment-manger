@@ -4,19 +4,19 @@ import Navbar from '../components/shared/navbar';
 
 export default function signin() {
 	return (
-		<>
-			<Navbar />
-			<div className=" flex justify-center items-center">
-				<div className="max-w-md">
-					<Header
-						heading="Signup to create an account"
-						paragraph="Already have an account? "
-						linkName="Login"
-						linkUrl="/"
-					/>
-					<Signup />
-				</div>
+		<div className="h-screen">
+			<div className="absolute top-0 w-full">
+				<Navbar />
 			</div>
-		</>
+			<div className=" flex flex-col h-full w-full justify-center items-center">
+				<Header
+					heading="Signup to create an account"
+					paragraph="Already have an account? "
+					linkName="Login"
+					linkUrl="/"
+				/>
+				<Signup />
+			</div>
+		</div>
 	);
 }
