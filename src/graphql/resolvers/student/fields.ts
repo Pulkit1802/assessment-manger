@@ -1,6 +1,6 @@
 import { prisma } from "../../../config";
 
-const fields = {
+export const fields = {
     Student: {
         sections: async (parent: any, _: any) => {
             return await prisma.section.findMany({

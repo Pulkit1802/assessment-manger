@@ -1,6 +1,6 @@
 import { prisma } from "../../../config";
 
-const fields = {
+export const fields = {
     Section: {
         course: async (parent: any, _: any) => {
             return await prisma.course.findFirst({
