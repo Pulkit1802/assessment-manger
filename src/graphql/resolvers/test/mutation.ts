@@ -12,33 +12,53 @@ export const mutations = {
         // TODO: Make changes to creation in single query
         // @ts-ignore
         delete data.parts;
+        delete data.markUploadDeadLine
+        data.markUploadDeadline = new Date().toISOString();
 
         const test = await prisma.test.create({
             data:{
                 ...data,
-                parts:{
-                    create: parts.map((part: any) => {
-                        const { questions } = part;
-                        // @ts-ignore
-                        delete part.questions;
-                        return {
-                            ...part,
-                            questions:{
-                                create: questions
-                            }
-                        }
-                    })
-                }
             },
-            include:{
-                parts:{
-                    include:{
-                        questions:true
-                    }
-                }
-            }
         });
 
-        return test;
+        parts.forEach(async (part: any) => {
+            const {questions} = part;
+            if (questions.length != part.maxQuestions)
+                throw new ApiError(400, "Questions count mismatch");
+
+            // @ts-ignore
+            delete part.questions;
+            part.testId = test.id;
+            const testPart = await prisma.part.create({
+                data:{
+                    ...part,
+                },
+            });
+
+            questions.forEach(async (question: any) => {
+                question.partId = testPart.id;
+                await prisma.question.create({
+                    data:{
+                        ...question,
+                    },
+                });
+            });
+
+        });
+
+        const res = await prisma.test.findUnique({
+            where: {
+                id: test.id,
+            },
+            include: {
+                parts: {
+                    include: {
+                        questions: true,
+                    },
+                },
+            },
+        });
+
+        return res;
     }
 }
