@@ -2,14 +2,11 @@ import { prisma } from "../../../config";
 
 export const fields = {
     Dept: {
-        users: async (parent: any, args: any) => {
-
-            const { where } = args || {};
+        users: async (parent: any, _: any) => {
 
             return await prisma.user.findMany({
                 where: {
                     deptId: parent.id,
-                    ...where,
                 }
             });
         },
@@ -20,28 +17,21 @@ export const fields = {
                 }
             });
         },
-        sections: async (parent: any, args: any) => {
-
-            const {where} = args || {};
+        sections: async (parent: any, _: any) => {
 
             return await prisma.program.findMany({
                 where: {
                     deptId: parent.id,
-                    ...where,
                 },
                 select: {
                     sections: true
                 }
             });
         },
-        students: async (parent: any, args: any) => {
-
-            const { where } = args || {};
-
+        students: async (parent: any, _: any) => {
             return await prisma.student.findMany({
                 where: {
                     deptId: parent.id,
-                    ...where,
                 },
             });
         }

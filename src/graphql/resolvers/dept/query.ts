@@ -7,10 +7,6 @@ export const queries = {
 
         const dept = prisma.dept.findFirst({
             where,
-            include: {
-                programs: true,
-                users: true,
-            }
         });
 
         if (!dept) throw new ApiError(404, "Dept not found");
@@ -18,16 +14,11 @@ export const queries = {
         return dept;
 
     },
-    
     depts: async (_: any, args: any) => {
         const where = args?.where || {};
 
         const depts = prisma.dept.findMany({
             where,
-            include: {
-                programs: true,
-                users: true,
-            }
         });
 
         return depts;

@@ -3,6 +3,7 @@ type Program {
     name: String!
 
     programCourses: [Course!]
+    dept: Dept!
     reports: [Report!]
     sections: [Section!]
     students: [Student!]
