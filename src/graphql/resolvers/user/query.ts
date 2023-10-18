@@ -9,14 +9,7 @@ export const queries = {
         const { where } = args;
 
         const user = await prisma.user.findFirst({
-            where,
-            include: {
-                dept: true,
-                cordinatedCourses: true,
-                cordinatedPrograms: true,
-                sections: true,
-                students: true,
-            }
+            where
         });
 
         if (!user) 
@@ -32,14 +25,7 @@ export const queries = {
             const { where } = args;
 
         return await prisma.user.findMany({
-            where,
-            include: {
-                dept: true,
-                cordinatedCourses: true,
-                cordinatedPrograms: true,
-                sections: true,
-                students: true,
-            }
+            where
         });
     },
     login: async (_: any, args: any) => {
