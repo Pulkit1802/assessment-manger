@@ -64,4 +64,6 @@ type Mutation {
 
     createMarking(data: MarkingCreateInput): Marking!
 
+    createReport(data: ReportCreateInput): Report!
+
 }

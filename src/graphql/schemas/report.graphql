@@ -11,11 +11,20 @@ type Report {
 
     questionsReport: [QuestionReport!]
 
-    section: Section!
-    course: Course!
-    program: Program!
+    section: Section
+    course: Course
+    program: Program
     test: Test!
 
     students: [Student!]
 
+}
+
+input ReportCreateInput {
+    name: String!
+    type: String!
+    sectionId: String
+    programId: String
+    courseId: String
+    testId: String!
 }
