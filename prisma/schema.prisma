@@ -215,9 +215,8 @@ model report {
   objective Int
   avgMarks  Float
   totalStudents Int
-  studentsPassed Int
-  studentsFailed Int
-  studentsAboveRequiredPercentage Int
+  studentsAboveRequiredPercentage Float
+  coAttainmentLevel Float
 
   questionsReport questionReport[] @relation("QuestionWiseStats")
 
@@ -238,6 +237,7 @@ model questionReport {
   id        String   @id  @default(cuid())
   avgMarks  Float
   studentsAttempted Int
+  studentsAboveRequiredPercentage Int
 
   questionId String
   reportId   String

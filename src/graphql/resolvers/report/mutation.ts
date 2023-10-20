@@ -5,6 +5,9 @@ export const mutations = {
     createReport: async (_:any, args: any) => {
         const {data} = args
 
+        // TODO: Get The Test Details
+            // ?? Get All the Question Ids
+
         const testDetails = await prisma.test.findUnique({
             where: {
                 id: data.testId,
@@ -14,95 +17,192 @@ export const mutations = {
                     include: {
                         questions: true,
                     }
-                }
-            }
+                },
+            },
         });
 
-        if(!testDetails)
+        if (!testDetails)
             throw new ApiError(404, "Test not found");
 
-        // TODO : Go through each question id
-        // TODO : Create List of question report
-        // TODO : Generate Report
-
         const {parts} = testDetails;
-        let questionDetails: any = [];
-        
+        const questionDetails: any = {};
+
+        const requiredPercentageForTheTest = testDetails.requiredPercentage;
+
         parts.forEach((part: any) => {
-            questionDetails.push(...part.questions)
+            const {questions} = part;
+            questions.forEach((question: any) => {
+
+                const objective = question.objective;
+
+                // ?? Check If Objective Is A Key In questionDetails, not create new one else push on key
+
+                if (!questionDetails[objective])
+                    questionDetails[objective] = {
+                        [question.id]: {
+                            maxMarks: question.maxMarks,
+                            studentsAttempted: 0,
+                            sumOfMarks: 0,
+                            studentsAboveRequiredPercentage: 0
+                        }
+                    };
+                else
+                    questionDetails[objective][question.id] = {
+                        maxMarks: question.maxMarks,
+                        studentsAttempted: 0,
+                        sumOfMarks: 0,
+                        studentsAboveRequiredPercentage: 0
+                    };
+            });
+
         });
 
-        // find all the distinct objectives from questionDetails
+        // console.log(questionDetails);
 
-        const questionWiseReportData: any = []
+        // TODO: Get The Respective Marking Details
+            // ?? Get Total Number of Students
+            // ?? Marking Details Change As Per Report Type (Section Wise, Program Wise, Course Wise)
 
-        const distinctObjectives = questionDetails.map((question: any) => question.objective).filter((value: any, index: any, self: any) => self.indexOf(value) === index);
+        // let markingDetails: any = [];
 
-        const allMarks = await prisma.marking.findMany({
+        // if (data.type === "section") {
+
+        //     markingDetails = await prisma.marking.findMany({
+        //         where: {
+        //             testId: data.testId,
+        //             // sectionId: data.sectionId,
+        //         },
+        //         include: {
+        //             questionWiseMarksObtained: true,
+        //         }
+        //     });
+
+        
+        // } else if (data.type === 'program') {
+            
+        //     // TODO: Get Reports For All The Sections In The Program
+        //         // ?? Merge All the Reports To Get Program Wise Report
+
+        // } else {
+
+        //     // TODO: Get Reports For All The Programs In The Course
+        //         // ?? Merge All the Reports To Get Course Wise Report
+
+        // }
+
+        
+
+        // TODO: From marking details find stats question wise
+            // ?? Get Number Of students Who Attempted
+            // ?? Get Average Students Marks
+            // ?? From Required Percentage Of Test, Find Number above that percentage
+        
+        // for (const [key, values] of Object.entries(questionDetails)) {
+            // console.log(key, values);
+            // const markingDetails = await prisma.marking.findMany({
+            //     where: {
+            //         testId: data.testId,
+            //         // sectionId: data.sectionId,
+            //     },
+            //     select: {
+            //         questionWiseMarksObtained: {
+            //             where: {
+            //                 id: {
+            //                     // @ts-ignore
+            //                     in: values.map((value: any) => value.id),
+            //                 }
+            //             },
+            //         }
+            //     }
+            // });
+
+            // const questionWiseReportDetails: any = {};
+            // @ts-ignore
+
+            // console.log(key, values);
+
+        // }
+
+        // const questionWiseMarkingDetails = await prisma.questionMarking.findMany({
+        //     where: {
+        //         id: {
+        //             in: questionIds,
+        //         }
+        //     }
+        // });
+
+        const totalStudents = await prisma.student.count({
             where: {
-                testId: data.testId,
+                sections: {
+                    some: {
+                        id: data.sectionId,
+                    }
+                },
             }
         })
 
-        const totalStudents = allMarks.length;
+        for (const [key, value] of Object.entries(questionDetails)) {
+            // @ts-ignore
+            const questionIds = Object.keys(value);
 
-        for (const objective of distinctObjectives) {
-
-            const ids = questionDetails.filter((question: any) => question.objective == objective).map((question: any) => question.id);
-
-            const questionAnalytics = await prisma.questionMarking.groupBy({
-                by: ["questionId"],
+            const questionMarkingForTheObjective = await prisma.questionMarking.findMany({
                 where: {
                     questionId: {
-                        in: ids,
-                    },
-                },
-                _count: {
-                    questionId: true,
-                },
-                _sum: {
-                    marksObtained: true,
-                },
-                _avg: {
-                    marksObtained: true,
-                },
-            });
-
-            questionWiseReportData.push(...questionAnalytics.map((question: any) => {
-                return {
-                    questionId: question.questionId,
-                    totalAttempts: question._count.questionId,
-                    sumOfMarks: question._sum.marksObtained,
-                    averageMarksObtained: question._avg.marksObtained,
-                    studentAboveRequiredPercentage: 0,
-                }
-            }))
-
-            const questionMarks = await prisma.questionMarking.findMany({
-                where: {
-                    questionId: {
-                        in: ids,
-                    },
-                }
-            });
-
-            const reqPercentage = testDetails.requiredPercentage;
-            questionMarks.forEach((questionMark: any) => {
-
-                const question = questionDetails.find((question: any) => question.id == questionMark.questionId);
-                // console.log(question)
-                // @ts-ignore
-                if (questionMark.marksObtained / question.maxMarks * 100 >= reqPercentage) { 
-                    const questionInd = questionWiseReportData.findIndex((repQuestion: any) => repQuestion.questionId == question.id);
-                    if (questionInd >= 0) {
-                        questionWiseReportData[questionInd].studentAboveRequiredPercentage += 1;
+                        in: questionIds,
                     }
                 }
-            })
+            });
+
+            const questionWiseReportData: any = [];
+
+            questionMarkingForTheObjective.forEach((markDetail) => {
+                questionDetails[key][markDetail.questionId]['studentsAttempted'] += 1;
+                questionDetails[key][markDetail.questionId]['sumOfMarks'] += markDetail.marksObtained;
+                // @ts-ignore
+                if (markDetail.marksObtained >= (value[markDetail.questionId].maxMarks * requiredPercentageForTheTest / 100))
+                    questionDetails[key][markDetail.questionId]['studentsAboveRequiredPercentage'] += 1;
+            });
+
+            let aboveReqPercentage = 0
+            let reportTotalAvgMarks = 0;
+
+            for (const [questionId, questionCalcDetail] of Object.entries(questionDetails[key])) {
+                // @ts-ignore
+                const avgMarks = questionCalcDetail.sumOfMarks / questionCalcDetail.studentsAttempted;
+                // @ts-ignore
+                aboveReqPercentage += questionCalcDetail.studentsAboveRequiredPercentage;
+                reportTotalAvgMarks += avgMarks;
+                questionWiseReportData.push({
+                    questionId,
+                    avgMarks,
+                // @ts-ignore
+                    studentsAttempted: questionCalcDetail.studentsAttempted,
+                // @ts-ignore
+                    studentsAboveRequiredPercentage: questionCalcDetail.studentsAboveRequiredPercentage,
+                })
+            }
+
+            console.log(questionWiseReportData);
+            break;
+            // await prisma.report.create({
+            //     data: {
+            //         testId: `${data.testId}`,
+            //         objective: +key,
+            //         name: `${data.name}`,
+            //         type: `${data.type}`,
+            //         totalStudents: +totalStudents,
+            //         avgMarks: Number(reportTotalAvgMarks / questionIds.length),
+            //         studentsPassed: aboveReqPercentage,
+            //         studentsFailed: totalStudents - aboveReqPercentage,
+            //         studentsAboveRequiredPercentage: aboveReqPercentage,
+            //         // coAttainmentLevel: 0
+            //         questionsReport: {
+            //             createMany: questionWiseReportData,
+            //         }
+            //     }
+            // })
 
         }
 
-        console.log(questionWiseReportData);
-        
     }
 }
