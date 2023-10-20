@@ -33,7 +33,7 @@ const createSection = () => {
 					noValidate
 					autoComplete="off"
 				>
-					<div className="flex flex-col p-32">
+					<div className="flex flex-col p-24 border border-[#3773cb] border-2 bg-[#f3f7ff]">
 						<h1 className="text-3xl font-bold text-[#3773cb] mb-4">
 							Create Section
 						</h1>
