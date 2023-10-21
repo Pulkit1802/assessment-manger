@@ -13,6 +13,7 @@ export const fields = {
                 },
             });
         },
+
         fa: async (parent: any, _: any) => {
             return await prisma.user.findFirst({
                 where: {
@@ -20,6 +21,7 @@ export const fields = {
                 }
             });
         },
+        
         dept: async (parent: any, _: any) => {
             return await prisma.dept.findFirst({
                 where: {
@@ -27,6 +29,7 @@ export const fields = {
                 }
             });
         },
+
         courses: async (parent: any, _: any) => {
             const section = await prisma.section.findMany({
                 where: {
@@ -44,10 +47,10 @@ export const fields = {
             if (!section) return [];
 
             return section.map((s: any) => s.course);
-
         },
+
         teachers: async (parent: any, _: any) => {
-            return await prisma.section.findMany({
+            const section = await prisma.section.findMany({
                 where: {
                     students: {
                         some: {
@@ -59,6 +62,8 @@ export const fields = {
                     faculty: true
                 }
             });
+
+            return section.map((s: any) => s.faculty);
         }
     }
 }

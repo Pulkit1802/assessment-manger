@@ -35,15 +35,17 @@ export const mutations = {
     attachSections: async (_: any, args: any) => {
         const {where, mapData} = args;
 
+        const sectionList = mapData.sectionIds.map((id: any) => {
+            return {
+                id
+            }
+        })
+
         const student = prisma.student.update({
             where,
             data: {
                 sections: {
-                    connect: mapData.sectionIds.map((id: any) => {
-                        return {
-                            id
-                        }
-                    })
+                    connect: sectionList
                 }
             }
         });
