@@ -5,7 +5,7 @@ export const mutations = {
     createSection: async (_: any, args: any) => {
         const {data} = args;
 
-        const program = prisma.program.findFirst({
+        const program = await prisma.program.findFirst({
             where: {
                 id: data.programId,
                 programCourses: {
@@ -17,9 +17,9 @@ export const mutations = {
         });
 
         if (!program)
-            throw new ApiError(400, 'Program Don\'t offer this Course')
+            throw new ApiError(400, 'Course Not Found In Program')
 
-        const section = prisma.section.create({
+        const section = await prisma.section.create({
             data
         });
 
@@ -29,40 +29,36 @@ export const mutations = {
     updateSection: async (_: any, args: any) => {
         const {where, data} = args;
 
-        const section = prisma.section.update({
+        return await prisma.section.update({
             where,
             data
         });
 
-        return section;
     },
 
     deleteSection: async (_: any, args: any) => {
         const {where} = args;
 
-        const section = prisma.section.delete({
+        return await prisma.section.delete({
             where
         });
 
-        return section;
     },
 
     attachStudents: async (_: any, args: any) => {
         const {where, mapData} = args;
 
-        const connectionList = mapData.studentIds.map((id: any) => {
+        const studentsList = mapData.studentIds.map((id: any) => {
             return {
                 id
             }
         })
 
-        console.log(connectionList)
-
-        const section = prisma.section.update({
+        return await prisma.section.update({
             where,
             data: {
                 students: {
-                    connect: connectionList
+                    connect: studentsList
                 }
             },
             include: {
@@ -70,6 +66,5 @@ export const mutations = {
             }
         });
 
-        return section;
     }
 }

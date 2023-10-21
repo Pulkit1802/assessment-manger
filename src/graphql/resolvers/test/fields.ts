@@ -3,7 +3,7 @@ import { prisma } from "../../../config";
 export const fields = {
     Test: {
         parts: async (parent: any, _: any) => {
-            return prisma.part.findMany({
+            return await prisma.part.findMany({
                 where: {
                     testId: parent.id
                 },
@@ -14,7 +14,7 @@ export const fields = {
         },
 
         marking: async (parent: any, _: any) => {
-            return prisma.marking.findMany({
+            return await prisma.marking.findMany({
                 where: {
                     testId: parent.id,
                 },
@@ -25,7 +25,7 @@ export const fields = {
         },
 
         reports: async (parent: any, _: any) => {
-            return prisma.report.findMany({
+            return await prisma.report.findMany({
                 where: {
                     testId: parent.id,
                 },

@@ -4,7 +4,7 @@ export const mutations = {
     createStudent: async (_: any, args: any) => {
         const {data} = args;
 
-        const student = prisma.student.create({
+        const student = await prisma.student.create({
             data
         });
 
@@ -14,22 +14,20 @@ export const mutations = {
     updateStudent: async (_: any, args: any) => {
         const {where, data} = args;
 
-        const student = prisma.student.update({
+        return await prisma.student.update({
             where,
             data
         });
 
-        return student;
     },
     
     deleteStudent: async (_: any, args: any) => {
         const {where} = args;
 
-        const student = prisma.student.delete({
+        return await prisma.student.delete({
             where
         });
 
-        return student;
     },
 
     attachSections: async (_: any, args: any) => {
@@ -41,7 +39,7 @@ export const mutations = {
             }
         })
 
-        const student = prisma.student.update({
+        return await prisma.student.update({
             where,
             data: {
                 sections: {
@@ -49,7 +47,5 @@ export const mutations = {
                 }
             }
         });
-
-        return student;
     }
 }

@@ -15,7 +15,7 @@ export const queries = {
 
     },
     sections: async (_: any, args: any) => {
-        const {where} = args;
+        const {where} = args || {};
 
         const sections = prisma.section.findMany({
             where,
