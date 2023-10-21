@@ -26,6 +26,12 @@ type Query {
 
     test(where: TestWhereInput): Test!
     tests(where: TestWhereInput): [Test!]
+
+    marking(where: MarkingWhereInput): Marking!
+    markings(where: MarkingWhereInput): [Marking!]
+
+    report(where: ReportWhereInput): Report!
+    reports(where: ReportWhereInput): [Report!]
 }
 
 type Mutation {

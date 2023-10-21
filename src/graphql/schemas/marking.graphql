@@ -17,3 +17,10 @@ input MarkingCreateInput {
     sectionId: ID!
     questionMarks: [QuestionMarksInput!]
 }
+
+input MarkingWhereInput {
+    id: ID
+    testId: ID
+    studentId: ID
+    sectionId: ID
+}

@@ -5,7 +5,7 @@ type Section {
     semester: Int!
     completed: Boolean!
 
-    students: [Student!]
+    students: [Student]
     reports: [Report!]
     markings: [Marking!]
     tests: [Test!]

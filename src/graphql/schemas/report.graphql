@@ -5,9 +5,8 @@ type Report {
     objective: Int!
     avgMarks: Float!
     totalStudents: Int!
-    studentsPassed: Int!
-    studentsFailed: Int!
     studentsAboveRequiredPercentage: Int!
+    coAttainmentLevel: Float!
 
     questionsReport: [QuestionReport!]
 
@@ -27,4 +26,12 @@ input ReportCreateInput {
     programId: String
     courseId: String
     testId: String!
+}
+
+input ReportWhereInput {
+    id: ID,
+    name: String
+    sectionId: String
+    programId: String
+    testId: String
 }

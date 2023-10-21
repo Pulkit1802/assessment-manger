@@ -24,7 +24,7 @@ export const fields = {
             });
         },
         students: async (parent: any, _: any) => {
-            return await prisma.student.findFirst({
+            return await prisma.student.findMany({
                 where: {
                     sections: {
                         some: {

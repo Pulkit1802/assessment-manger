@@ -22,9 +22,6 @@ export const mutations = {
                         })
                     }
                 },
-                include: {
-                    program: true
-                }
             });
         }
 
@@ -60,9 +57,6 @@ export const mutations = {
                     })
                 }
             },
-            include: {
-                program: true
-            }
         });
 
         return course;

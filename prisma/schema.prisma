@@ -136,6 +136,7 @@ model test {
 
   courseId  String
   course    course @relation("TestsUnderCourse", fields: [courseId], references: [id])
+  @@unique([name, courseId])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -202,7 +203,7 @@ model questionMarking {
   question   question @relation("MarksObtainedOnQuestion", fields: [questionId], references: [id])
   marking   marking @relation("MarksObtainedOnQuestion", fields: [markingId], references: [id])
   part      part    @relation("MarksObtainedOnQuestion", fields: [partId], references: [id])
-  @@unique([questionId, markingId])
+  @@unique([questionId, markingId, partId])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

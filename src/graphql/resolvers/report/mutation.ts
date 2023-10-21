@@ -131,7 +131,7 @@ export const mutations = {
         //     }
         // });
 
-        const totalStudents = await prisma.student.count({
+        const students = await prisma.student.findMany({
             where: {
                 sections: {
                     some: {
@@ -141,21 +141,43 @@ export const mutations = {
             }
         })
 
+        const totalStudents = students.length;
+        const studentIds = students.map((student) => student.id);
+        const markingDetails = await prisma.marking.findMany({
+            where: {
+                studentId: {
+                    in: studentIds,
+                }
+            },
+        });
+
+        const markingIds = markingDetails.map((markingDetail) => markingDetail.id);
+        console.log(markingIds);
+
         for (const [key, value] of Object.entries(questionDetails)) {
             // @ts-ignore
             const questionIds = Object.keys(value);
+            console.log(questionIds)
+            
+            // const questionMarkingForTheObjective = markingDetails.map((markingDetail) => markingDetail.questionWiseMarksObtained);
 
             const questionMarkingForTheObjective = await prisma.questionMarking.findMany({
                 where: {
                     questionId: {
                         in: questionIds,
-                    }
+                    },
+                    // markingId: {
+                    //     in: markingIds,
+                    // }
                 }
             });
+
+            console.log(questionMarkingForTheObjective);
 
             const questionWiseReportData: any = [];
 
             questionMarkingForTheObjective.forEach((markDetail) => {
+                // console.log(questionDetails[key], markDetail.questionId)
                 questionDetails[key][markDetail.questionId]['studentsAttempted'] += 1;
                 questionDetails[key][markDetail.questionId]['sumOfMarks'] += markDetail.marksObtained;
                 // @ts-ignore
@@ -182,8 +204,7 @@ export const mutations = {
                 })
             }
 
-            console.log(questionWiseReportData);
-            break;
+            // console.log(questionWiseReportData);
             // await prisma.report.create({
             //     data: {
             //         testId: `${data.testId}`,
@@ -192,10 +213,8 @@ export const mutations = {
             //         type: `${data.type}`,
             //         totalStudents: +totalStudents,
             //         avgMarks: Number(reportTotalAvgMarks / questionIds.length),
-            //         studentsPassed: aboveReqPercentage,
-            //         studentsFailed: totalStudents - aboveReqPercentage,
             //         studentsAboveRequiredPercentage: aboveReqPercentage,
-            //         // coAttainmentLevel: 0
+            //         coAttainmentLevel: 0,
             //         questionsReport: {
             //             createMany: questionWiseReportData,
             //         }
