@@ -64,5 +64,14 @@ export const mutations = {
         });
 
         return res;
-    }
+    },
+
+    deleteTest: async (_: any, args: any) => {
+        const {where} = args;
+
+        return await prisma.test.delete({
+            where
+        });
+
+    },
 }

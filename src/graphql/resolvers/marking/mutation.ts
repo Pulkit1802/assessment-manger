@@ -63,12 +63,18 @@ export const mutations = {
                     },
                 },
             },
-            include: {
-                questionWiseMarksObtained: true,
-            }
         });
 
         return marking
+
+    },
+
+    deleteMarking: async (_: any, args: any) => {
+        const {where} = args;
+
+        return await prisma.marking.delete({
+            where
+        });
 
     }
 };

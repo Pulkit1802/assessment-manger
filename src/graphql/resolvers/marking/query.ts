@@ -3,7 +3,7 @@ import ApiError from "../../../utils/apiError";
 
 export const queries = {
     marking: async (_: any, args: any) => {
-        const { where } = args || {};
+        const { where } = args;
         const marking = await prisma.marking.findUnique({
             where,
             include: {
