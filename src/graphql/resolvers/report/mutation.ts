@@ -152,12 +152,12 @@ export const mutations = {
         });
 
         const markingIds = markingDetails.map((markingDetail) => markingDetail.id);
-        console.log(markingIds);
+        // console.log(markingIds);
 
         for (const [key, value] of Object.entries(questionDetails)) {
             // @ts-ignore
             const questionIds = Object.keys(value);
-            console.log(questionIds)
+            // console.log(questionIds)
             
             // const questionMarkingForTheObjective = markingDetails.map((markingDetail) => markingDetail.questionWiseMarksObtained);
 
@@ -166,13 +166,13 @@ export const mutations = {
                     questionId: {
                         in: questionIds,
                     },
-                    // markingId: {
-                    //     in: markingIds,
-                    // }
+                    markingId: {
+                        in: markingIds,
+                    }
                 }
             });
 
-            console.log(questionMarkingForTheObjective);
+            // console.log(questionMarkingForTheObjective);
 
             const questionWiseReportData: any = [];
 
@@ -204,24 +204,47 @@ export const mutations = {
                 })
             }
 
-            // console.log(questionWiseReportData);
-            // await prisma.report.create({
-            //     data: {
-            //         testId: `${data.testId}`,
-            //         objective: +key,
-            //         name: `${data.name}`,
-            //         type: `${data.type}`,
-            //         totalStudents: +totalStudents,
-            //         avgMarks: Number(reportTotalAvgMarks / questionIds.length),
-            //         studentsAboveRequiredPercentage: aboveReqPercentage,
-            //         coAttainmentLevel: 0,
-            //         questionsReport: {
-            //             createMany: questionWiseReportData,
-            //         }
-            //     }
-            // })
+            console.log(questionWiseReportData);
+
+            try {
+                await prisma.report.create({
+                    data: {
+                        testId: `${data.testId}`,
+                        sectionId: `${data.sectionId}`,
+                        objective: +key,
+                        name: `${data.name}`,
+                        type: `${data.type}`,
+                        totalStudents: +totalStudents,
+                        avgMarks: Number(reportTotalAvgMarks / questionIds.length),
+                        studentsAboveRequiredPercentage: aboveReqPercentage,
+                        coAttainmentLevel: 0,
+                        questionsReport: {
+                            createMany: {
+                                data: questionWiseReportData,
+                            }
+                        }
+                    }
+                })
+            } catch (e: any) {
+                console.log("Error: \n", e.message, "\n", e.code, "\n", e.meta);
+            }
+            
 
         }
 
+        return await prisma.report.findFirst({
+            where: {
+                testId: data.testId,
+                sectionId: data.sectionId,
+            }
+        })
+
+    },
+
+    deleteReports: async (_: any, args: any) => {
+        const questionReports = await prisma.questionReport.deleteMany();
+        const rep = await prisma.report.deleteMany();
+        console.log(rep);
+        return true;
     }
 }

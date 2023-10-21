@@ -11,6 +11,7 @@ export const mutations = {
 
         // @ts-ignore
         delete data.parts;
+        delete data.markUploadDeadLine,
         data.markUploadDeadline = new Date().toISOString();
 
         const test = await prisma.test.create({

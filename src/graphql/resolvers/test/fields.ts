@@ -13,16 +13,16 @@ export const fields = {
             })
         },
 
-        marking: async (parent: any, _: any) => {
-            return await prisma.marking.findMany({
-                where: {
-                    testId: parent.id,
-                },
-                include: {
-                    questionWiseMarksObtained: true,
-                }
-            })
-        },
+        // marking: async (parent: any, _: any) => {
+        //     return await prisma.marking.findMany({
+        //         where: {
+        //             testId: parent.id,
+        //         },
+        //         include: {
+        //             questionWiseMarksObtained: true,
+        //         }
+        //     })
+        // },
 
         reports: async (parent: any, _: any) => {
             return await prisma.report.findMany({

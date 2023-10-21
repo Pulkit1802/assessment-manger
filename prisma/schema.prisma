@@ -154,6 +154,7 @@ model part {
 
   testId    String
   test      test @relation("TestParts", fields: [testId], references: [id])
+  @@unique([name, testId])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -171,6 +172,7 @@ model question {
 
   partId    String
   part      part @relation("TestQuestions", fields: [partId], references: [id])
+  @@unique([name, partId])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

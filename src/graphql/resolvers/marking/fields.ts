@@ -1,5 +1,4 @@
 import { prisma } from "../../../config";
-import ApiError from "../../../utils/apiError";
 
 export const fields = {
     Marking: {

@@ -17,7 +17,11 @@ export const queries = {
     reports: async (_: any, args: any) => {
         const {where} = args || {}
 
-        return prisma.report.findMany({where});
+        console.log(where);
+
+        return await prisma.report.findMany({
+            where
+        });
 
     }
 }
