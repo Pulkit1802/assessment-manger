@@ -27,6 +27,7 @@ input ReportCreateInput {
     programId: String
     courseId: String
     testId: String!
+    objective: String
 }
 
 input ReportWhereInput {

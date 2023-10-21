@@ -71,7 +71,7 @@ type Mutation {
     createMarking(data: MarkingCreateInput): Marking!
     deleteMarking(where: MarkingWhereInput): Marking!
 
-    createReport(data: ReportCreateInput): Report!
+    createReport(data: ReportCreateInput): [Report!]
     deleteReport(where: ReportWhereInput): Report!
     deleteReports: Boolean!
 
