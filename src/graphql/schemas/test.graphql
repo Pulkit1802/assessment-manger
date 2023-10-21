@@ -6,7 +6,6 @@ type Test {
     markUploadDeadLine: String!
 
     parts: [Part!]
-    questions: [Question!]
     reports: [Report!]
     course: Course!
     section: Section!

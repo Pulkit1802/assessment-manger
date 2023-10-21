@@ -9,7 +9,7 @@ type Course {
     tests: [Test!]
     reports: [Report!]
     students: [Student!]
-    users: [User!]
+    faculty: [User!]
 
 }
 

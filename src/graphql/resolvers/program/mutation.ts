@@ -9,17 +9,20 @@ export  const mutations = {
         });
 
         if (mapData && mapData.courseIds.length > 0) {
+
+            const courseList = mapData.courseIds.map((id: any) => {
+                return {
+                    id
+                }
+            })
+
             program = await prisma.program.update({
                 where: {
                     id: program.id
                 },
                 data: {
                     programCourses: {
-                        connect: mapData.courseIds.map((id: any) => {
-                            return {
-                                id
-                            }
-                        })
+                        connect: courseList,
                     }
                 },
             })
@@ -27,6 +30,7 @@ export  const mutations = {
         
         return program;
     },
+
     updateProgram: async (_: any, args: any) => {
         const { data, where } = args;
 
@@ -35,6 +39,7 @@ export  const mutations = {
             where
         });
     },
+
     deleteProgram: async (_: any, args: any) => {
         const { where } = args;
 
@@ -42,24 +47,25 @@ export  const mutations = {
             where
         });
     },
+
     attachCourses: async (_: any, args: any) => {
 
         const {where, mapData} = args;
 
-        const program = await prisma.program.update({
+        const courseList = mapData.courseIds.map((id: any) => {
+            return {
+                id
+            }
+        })
+
+        return await prisma.program.update({
             where,
             data: {
                 programCourses: {
-                    connect: mapData.courseIds.map((id: any) => {
-                        return {
-                            id
-                        }
-                    })
+                    connect: courseList,
                 }
             }
         });
-
-        return program;
 
     }
 }

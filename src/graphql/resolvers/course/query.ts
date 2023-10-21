@@ -15,7 +15,7 @@ export const queries = {
 
     },
     courses: async (_: any, args: any) => {
-        const {where} = args;
+        const {where} = args || {};
 
         const courses = prisma.course.findMany({
             where,

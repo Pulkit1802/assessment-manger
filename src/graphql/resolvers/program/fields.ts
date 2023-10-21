@@ -3,12 +3,13 @@ import { prisma } from "../../../config";
 export const fields = {
     Program: {
         dept: async (parent: any, _: any) => {
-            return await prisma.dept.findFirst({
+            return await prisma.dept.findUnique({
                 where: {
                     id: parent.deptId
                 }
             });
         },
+
         sections: async (parent: any, _: any) => {
             return await prisma.section.findMany({
                 where: {
@@ -16,6 +17,7 @@ export const fields = {
                 }
             });
         },
+
         students: async (parent: any, _: any) => {
             return await prisma.student.findMany({
                 where: {
@@ -27,6 +29,7 @@ export const fields = {
                 },
             });
         },
+
         programCourses: async (parent: any, _: any) => {
             return await prisma.course.findMany({
                 where: {

@@ -5,7 +5,7 @@ import ApiError from "../../../utils/apiError";
 export const mutations = {
     createUser: async (_: any, args: any) => {
 
-        const { data } = args;
+        const { data } = args || {};
 
         data.password = await bcrypt.hash(data.password, 10);
 

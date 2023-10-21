@@ -3,9 +3,9 @@ import { prisma } from "../../../config";
 
 export const queries = {
     program: async (_: any, args: any) => {
-        const {where} = args || {};
+        const {where} = args;
 
-        const program = prisma.program.findFirst({
+        const program = prisma.program.findUnique({
             where,
         });
 

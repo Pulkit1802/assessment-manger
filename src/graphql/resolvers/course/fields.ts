@@ -42,7 +42,7 @@ export const fields = {
             return sections.map((s: any) => s.students);
 
         },
-        users: async (parent: any, _: any) => {
+        faculty: async (parent: any, _: any) => {
             const sections = await prisma.section.findMany({
                 where: {
                     courseId: parent.id

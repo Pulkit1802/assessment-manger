@@ -3,19 +3,20 @@ import { prisma } from "../../../config";
 
 export const queries = {
     dept: async (_: any, args: any) => {
-        const where = args?.where || {};
+        const { where } = args || {};
 
-        const dept = prisma.dept.findFirst({
+        const dept = prisma.dept.findUnique({
             where,
         });
 
-        if (!dept) throw new ApiError(404, "Dept not found");
+        if (!dept) 
+            throw new ApiError(404, "Dept not found");
         
         return dept;
 
     },
     depts: async (_: any, args: any) => {
-        const where = args?.where || {};
+        const { where } = args?.where || {};
 
         const depts = prisma.dept.findMany({
             where,
