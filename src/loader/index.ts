@@ -1,12 +1,13 @@
 import { expressMiddleware } from "@apollo/server/express4"
-import { Application, json } from "express";
+import { Application, json, Request, Response, NextFunction } from "express";
 import http, { Server } from "http";
 import { buildApolloServer } from "./apolloServer";
 import helmet from "helmet";
 import morgan from "morgan";
 import cors from "cors";
-import configs from "../config";
+// import configs from "../config";
 import logger from "../utils/logger";
+import handleFileIfAny from "../utils/file";
 
 export default async ( { app }: { app: Application } ) : Promise<Server> => {
 
@@ -45,6 +46,21 @@ export default async ( { app }: { app: Application } ) : Promise<Server> => {
         const apolloServer = await buildApolloServer(server);
         await apolloServer.start();
 
+        app.use('/file', handleFileIfAny.single('file'), (req: Request, res: Response, next: NextFunction) => {
+            try {
+                const {file} = req;
+                if (!file) throw new Error("No file found");
+                res.status(200).json({
+                    message: "File uploaded successfully",
+                    file: file.filename,
+                });
+            } catch (e) {
+                logger.error("Failed to upload file \n", e);
+                res.status(500).json({
+                    message: "Failed to upload file",
+                });
+            }
+        })
         app.use('/graphql', expressMiddleware(apolloServer));
 
         return server;

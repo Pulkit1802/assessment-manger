@@ -1,5 +1,7 @@
 import { prisma } from "../../../config";
+import xlsx from "xlsx";
 import ApiError from "../../../utils/apiError";
+import path from "path";
 
 export const mutations = {
     createMarking: async (_: any, args: any) => {
@@ -69,9 +71,110 @@ export const mutations = {
 
     },
 
+    uploadMarking: async (_: any, args: any) => {
+
+        const {data} = args || {};
+        const {sectionId, testId, fileUrl} = data;
+
+        const testDetails = await prisma.test.findUnique({
+            where: {
+                id: testId,
+            },
+            select: {
+                parts: {
+                    select: {
+                        id: true,
+                        // requiredQuestions: true,
+                        questions: true,
+                    }
+                }
+            }
+        });
+
+        if (!testDetails)
+            throw new ApiError(404, "Test not found");
+
+        const sectionStudents = await prisma.section.findUnique({
+            where: {
+                id: sectionId,
+            },
+            select: {
+                students: true,
+            }
+        });
+
+        if (!sectionStudents)
+            throw new ApiError(404, "Section not found");
+
+        console.log()
+
+        const workbook = xlsx.readFile(path.join(__dirname + './../../../../uploads/'+fileUrl));
+        const sheet = workbook.Sheets[workbook.SheetNames[0]];
+        const studentMarking = xlsx.utils.sheet_to_json(sheet);
+
+        const {parts} = testDetails;
+        const {students} = sectionStudents;
+
+        // console.log(students)
+    
+        studentMarking.forEach(async (studentMark: any) => {
+
+            const student = students.find((student: any) => student.regNo == studentMark.regNo);
+            if (!student)
+                throw new ApiError(404, "Student not found");
+
+            const studentQuestionWiseMarks: any[] = [];
+            let totalMarksObtained = 0;
+            parts.forEach((part: any) => {
+
+                const {id, questions} = part;
+
+                questions.forEach((question: any) => {
+
+                    studentQuestionWiseMarks.push({
+                        partId: id,
+                        questionId: question.id,
+                        marksObtained: studentMark[question.name],
+                    });
+
+                    totalMarksObtained += studentMark[question.name];
+
+                });
+
+            })
+
+            await prisma.marking.create({
+                data: {
+                    studentId: student.id,
+                    testId,
+                    totalMarksObtained,
+                    sectionId,
+                    questionWiseMarksObtained: {
+                        createMany: {
+                            data: studentQuestionWiseMarks,
+                        },
+                    },
+                },
+            });
+
+        })
+
+        return await prisma.marking.findMany({
+            where: {
+                testId: testId,
+                sectionId: sectionId,
+            }
+        });
+
+    },
+
     deleteMarking: async (_: any, args: any) => {
         const {where} = args;
-
+        await prisma.questionMarking.deleteMany({
+            where: {
+                markingId: where.id,
+            }
+        })
         return await prisma.marking.delete({
             where
         });

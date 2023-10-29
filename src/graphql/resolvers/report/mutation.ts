@@ -13,14 +13,14 @@ export const mutations = {
             reports = await genProgramReport(data)
         }
 
-        console.log(reports);
+        // console.log(reports); 
 
         return reports;
 
     },
 
     deleteReports: async (_: any, args: any) => {
-        const questionReports = await prisma.questionReport.deleteMany();
+        await prisma.questionReport.deleteMany();
         const rep = await prisma.report.deleteMany();
         console.log(rep);
         return true;

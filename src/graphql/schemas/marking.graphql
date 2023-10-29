@@ -24,3 +24,9 @@ input MarkingWhereInput {
     studentId: ID
     sectionId: ID
 }
+
+input MarkingUploadInput {
+    sectionId: ID!
+    testId: ID!
+    fileUrl: String!
+}

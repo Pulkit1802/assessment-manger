@@ -69,6 +69,7 @@ type Mutation {
     deleteTest(where: TestWhereInput): Test!
 
     createMarking(data: MarkingCreateInput): Marking!
+    uploadMarking(data: MarkingUploadInput): [Marking!]
     deleteMarking(where: MarkingWhereInput): Marking!
 
     createReport(data: ReportCreateInput): [Report!]
