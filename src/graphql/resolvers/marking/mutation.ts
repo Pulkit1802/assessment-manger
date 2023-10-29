@@ -45,6 +45,15 @@ export const mutations = {
                     });
                 }
 
+            } else if (partQuestionMarks.length > part.requiredQuestions) {
+                while (partQuestionMarks.length > part.requiredQuestions) {
+                    let leastMarkQuestionIndex = 0;
+                    for (let i=1; i<partQuestionMarks.length; i++) {
+                        if (partQuestionMarks[i].marksObtained < partQuestionMarks[leastMarkQuestionIndex].marksObtained)
+                            leastMarkQuestionIndex = i;
+                    }
+                    delete partQuestionMarks[leastMarkQuestionIndex];
+                }
             }
         });
 
@@ -84,7 +93,7 @@ export const mutations = {
                 parts: {
                     select: {
                         id: true,
-                        // requiredQuestions: true,
+                        requiredQuestions: true,
                         questions: true,
                     }
                 }
@@ -129,17 +138,45 @@ export const mutations = {
 
                 const {id, questions} = part;
 
+                const thisPartMarks: any = []
+
+                const unmarkedQuestion: any = []
+
                 questions.forEach((question: any) => {
 
-                    studentQuestionWiseMarks.push({
-                        partId: id,
-                        questionId: question.id,
-                        marksObtained: studentMark[question.name],
-                    });
-
-                    totalMarksObtained += studentMark[question.name];
-
+                    if (studentMark[question.name]) {
+                        thisPartMarks.push({
+                            partId: id,
+                            questionId: question.id,
+                            marksObtained: studentMark[question.name],
+                        });
+                        totalMarksObtained += studentMark[question.name];
+                    } else {
+                        unmarkedQuestion.push(question);
+                    }
                 });
+
+                if (thisPartMarks.length < part.requiredQuestions) {
+                    const diff = part.requiredQuestions - thisPartMarks.length;
+                    for(let i=0; i < diff; i++) {
+                        thisPartMarks.push({
+                            partId: id,
+                            questionId: unmarkedQuestion[i].id,
+                            marksObtained: 0,
+                        });
+                    }
+                } else if (thisPartMarks.length > part.requiredQuestions) {
+                    while (thisPartMarks.length > part.requiredQuestions) {
+                        let leastMarkQuestionIndex = 0;
+                        for (let i=1; i<thisPartMarks.length; i++) {
+                            if (thisPartMarks[i].marksObtained < thisPartMarks[leastMarkQuestionIndex].marksObtained)
+                                leastMarkQuestionIndex = i;
+                        }
+                        delete thisPartMarks[leastMarkQuestionIndex];
+                    }
+                }
+
+                studentQuestionWiseMarks.push(...thisPartMarks);
 
             })
 
@@ -156,6 +193,8 @@ export const mutations = {
                     },
                 },
             });
+
+            // console.log(studentQuestionWiseMarks);
 
         })
 
