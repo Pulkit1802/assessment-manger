@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import {redirect} from 'next/navigation'
 import { FormInput } from "./input";
 import Link from 'next/link'
 
@@ -22,6 +23,12 @@ export const LoginForm = () => {
     const handleLoginFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
     }
+
+    useEffect(() => {
+        const token = localStorage.getItem("token");
+        if (token)
+            redirect("/dashboard")
+    })
     
     return (
         <div>
@@ -53,7 +60,7 @@ export const LoginForm = () => {
                 </div>
                 <div className="mt-8">
                     <p className="text-gray-800 text-center">Don't Have An Account? 
-                        <Link href={'/signUp'} className="ml-2 text-sky-600">SignUp</Link>
+                        <Link href={'/register'} className="ml-2 text-sky-600">Register</Link>
                     </p>
                 </div>
             </form>
