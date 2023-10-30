@@ -41,6 +41,7 @@ type Mutation {
     deleteDept(where: DeptWhereInput): Dept!
 
     createUser(data: UserCreateInput): User!
+    uploadUsers(fileName: String!): {users: [User!], discarded: [String!]}
     updateUser(where: UserWhereInput, data: UserUpdateInput): User!
     deleteUser(where: UserWhereInput): User!
 
@@ -70,6 +71,7 @@ type Mutation {
 
     createMarking(data: MarkingCreateInput): Marking!
     uploadMarking(data: MarkingUploadInput): [Marking!]
+    downloadMarking(sectionId: ID!, testId: ID!): String!
     deleteMarking(where: MarkingWhereInput): Marking!
 
     createReport(data: ReportCreateInput): [Report!]

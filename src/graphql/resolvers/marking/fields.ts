@@ -20,7 +20,7 @@ export const fields = {
             })
         },
         student: async (parent: any, _: any) => {
-            return await prisma.user.findMany({
+            return await prisma.student.findUnique({
                 where: {
                     id: parent.studentId
                 }

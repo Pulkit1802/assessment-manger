@@ -225,6 +225,7 @@ const genSectionReport = async (data: any) => {
         }
 
         console.log(questionWiseReportData);
+        aboveReqPercentage /= questionWiseReportData.length;
 
         try {
             await prisma.report.create({
@@ -384,13 +385,18 @@ const genProgramReport = async (data: any) => {
 
         let totalStudents = 0;
         let avgMarks = 0;
+        let avgStudentAboveReqPercentage = 0;
 
         reportsForTheObjective.forEach((report) => {
             totalStudents += report.totalStudents;
+            avgStudentAboveReqPercentage += report.studentsAboveRequiredPercentage;
             avgMarks += report.avgMarks;
         });
 
         avgMarks /= reportsForTheObjective.length;
+        avgStudentAboveReqPercentage /= reportsForTheObjective.length;
+
+        // get attainments for the test course wise
 
         try {
             await prisma.report.create({
@@ -402,7 +408,7 @@ const genProgramReport = async (data: any) => {
                     type: `${data.type}`,
                     totalStudents: totalStudents,
                     avgMarks: avgMarks,
-                    studentsAboveRequiredPercentage: 0,
+                    studentsAboveRequiredPercentage: avgStudentAboveReqPercentage,
                     coAttainmentLevel: 0,
                     questionsReport: {
                         createMany: {

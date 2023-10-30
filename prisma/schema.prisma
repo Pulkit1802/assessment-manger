@@ -89,6 +89,7 @@ model course {
   sections  section[] @relation("SectionsUnderCourse")
   tests     test[]    @relation("TestsUnderCourse")
   reports   report[]  @relation("CourseReports")
+  attainments attainments[] @relation("TestAttainments")
 
   cordinatorId String
 
@@ -120,6 +121,15 @@ model section {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model attainments {
+  id       String   @id  @default(cuid())
+  reqPercentage Float
+  attainmentValue Float
+
+  courseId  String
+  course  course  @relation("TestAttainments", fields: [courseId], references: [id])
 }
 
 model test {

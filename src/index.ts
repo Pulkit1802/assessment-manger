@@ -5,7 +5,7 @@ import logger from "./utils/logger";
 import configs from "./config";
 
 process.on("uncaughtException", (error) => {
-    logger.error("Uncaught Exception: \n", error);
+    logger.warn("Uncaught Exception: \n", error);
     process.exit(1);
 });
 
@@ -22,19 +22,15 @@ loader({ app }).then((app) => {
 });
 
 process.on("SIGINT", () => {
-    logger.info("SIGINT signal received");
-    logger.info("Closing server");
+    logger.warn("SIGINT signal received");
     server.close(() => {
-        logger.info("Server closed");
         process.exit(0);
     });
 });
 
 process.on("SIGTERM", () => {
-    logger.info("SIGTERM signal received");
-    logger.info("Closing server");
+    logger.warn("SIGTERM signal received");
     server.close(() => {
-        logger.info("Server closed");
         process.exit(0);
     });
 });

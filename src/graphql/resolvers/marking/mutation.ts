@@ -1,5 +1,5 @@
 import { prisma } from "../../../config";
-import xlsx from "xlsx";
+import xlsx, { writeFileAsync } from "xlsx";
 import ApiError from "../../../utils/apiError";
 import path from "path";
 
@@ -148,9 +148,9 @@ export const mutations = {
                         thisPartMarks.push({
                             partId: id,
                             questionId: question.id,
-                            marksObtained: studentMark[question.name],
+                            marksObtained: (+studentMark[question.name]),
                         });
-                        totalMarksObtained += studentMark[question.name];
+                        totalMarksObtained += (+studentMark[question.name]);
                     } else {
                         unmarkedQuestion.push(question);
                     }
@@ -204,6 +204,78 @@ export const mutations = {
                 sectionId: sectionId,
             }
         });
+
+    },
+
+    downloadMarking: async (_: any, args: any) => {
+        const {sectionId, testId} = args
+
+        const testDetails = await prisma.test.findUnique({
+            where: {
+                id: testId
+            },
+            select: {
+                parts: {
+                    select: {
+                        questions: true
+                    }
+                }
+            }
+        })
+
+        if (!testDetails)
+            throw new ApiError(404, 'Test Not Found');
+
+        const sectionDetails = await prisma.section.findUnique({
+            where: {
+                id: sectionId,
+            }, select: {
+                students: {
+                    select: {
+                        regNo: true,
+                        name: true
+                    }
+                }
+            }
+        })
+
+        if (!sectionDetails)
+            throw new ApiError(404, 'Section Not Found');
+
+        const {parts} = testDetails;
+        
+        const convertedQuestionToKeys: any = {}
+        
+        parts.forEach((part: any) => {
+            const {questions} = part;
+
+            questions.forEach((question: any) => {
+                convertedQuestionToKeys[question.name] = ''
+            })
+
+        })
+
+        const {students} = sectionDetails;
+        const excelJsonData: any = []
+
+        students.forEach((student: any) => {
+            excelJsonData.push({
+                ...student,
+                ...convertedQuestionToKeys
+            })
+        })
+
+        console.log(excelJsonData)
+
+        const markingExcel = xlsx.utils.book_new()
+        const sheet = xlsx.utils.json_to_sheet(excelJsonData);
+
+        xlsx.utils.book_append_sheet(markingExcel, sheet);
+        const fileName = `${sectionId}_${testId}_marking.xlsx`
+        // console.log(sheet)
+        xlsx.writeFile(markingExcel, 'uploads/'+fileName)
+
+        return fileName;
 
     },
 

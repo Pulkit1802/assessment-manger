@@ -5,11 +5,12 @@ import jwt from 'jsonwebtoken';
 import config from "../../../config";
 
 export const queries = {
-    user: async (_: any, args: any) => {
-        const { where } = args;
+    user: async (_: any, args: any, ctx: any) => {
 
-        const user = await prisma.user.findFirst({
-            where
+        const user = await prisma.user.findUnique({
+            where: {
+                id: ctx.user.id
+            }
         });
 
         if (!user) 
@@ -20,15 +21,14 @@ export const queries = {
 
         return user;
     },
-    users: async (_:any, args: any) => {
+    users: async (_:any, args: any, context: any) => {
         
+        console.log(context.user);
+
         const { where } = args;
 
         return await prisma.user.findMany({
             where,
-            include: {
-                dept: true,
-            }
         });
     },
     login: async (_: any, args: any) => {
@@ -52,7 +52,7 @@ export const queries = {
         // @ts-ignore
         delete user.password;
 
-        const token = jwt.sign(user, config.secret, { expiresIn: '1d' });
+        const token = jwt.sign(user, config.secret, { expiresIn: '2h' });
 
         return {
             user,

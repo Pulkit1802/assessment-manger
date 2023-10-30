@@ -1,9 +1,10 @@
 import dotenv from 'dotenv';
 import z from 'zod';
+import path from 'path';
 
 import { PrismaClient } from '@prisma/client';
 export const prisma = new PrismaClient();
-
+export const filePath = path.join(__dirname, '../../uploads/');
 dotenv.config({ path: './.env' });
 
 const envSchema = z.object({
