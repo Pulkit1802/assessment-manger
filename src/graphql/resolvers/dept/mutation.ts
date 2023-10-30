@@ -8,19 +8,25 @@ export const mutations = {
             data
         });
     },
+
     updateDept: async (_: any, args: any) => {
-        const { data, where } = args;
+        const { id, data } = args;
 
         return await prisma.dept.update({
-            data,
-            where
+            where: {
+                id
+            },
+            data
         });
     },
+
     deleteDept: async (_: any, args: any) => {
-        const { where } = args;
+        const { id } = args;
 
         return await prisma.dept.delete({
-            where
+            where: {
+                id
+            }
         });
     }
 }

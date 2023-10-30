@@ -15,13 +15,22 @@ export const queries = {
         return dept;
 
     },
+
     depts: async (_: any, args: any) => {
-        const { where } = args?.where || {};
+        return await prisma.dept.findMany();
+    },
 
-        const depts = prisma.dept.findMany({
-            where,
+    searchDepts: async (_: any, args: any) => {
+        const {name} = args || {};
+
+        return await prisma.dept.findMany({
+            where: {
+                name: {
+                    contains: name,
+                    mode: 'insensitive'
+                }
+            }
         });
-
-        return depts;
+        
     }
 }

@@ -7,7 +7,8 @@ type Query {
     login(email: String!, password: String!): Login!
 
     dept(where: DeptWhereInput): Dept
-    depts(where: DeptWhereInput): [Dept!]
+    depts: [Dept!]
+    searchDepts(name: String!): [Dept!]
 
     me: User!
     user(id: String, email: String): User
@@ -40,8 +41,8 @@ type Query {
 type Mutation {
 
     createDept(data: DeptCreateInput): Dept!
-    updateDept(where: DeptWhereInput, data: DeptUpdateInput): Dept!
-    deleteDept(where: DeptWhereInput): Dept!
+    updateDept(id: ID!, data: DeptUpdateInput): Dept!
+    deleteDept(id: ID!): Dept!
 
     createUser(data: UserCreateInput): User!
     register(data: UserCreateInput!): Boolean!
