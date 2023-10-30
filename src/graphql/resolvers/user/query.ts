@@ -5,11 +5,14 @@ import jwt from 'jsonwebtoken';
 import config from "../../../config";
 
 export const queries = {
-    user: async (_: any, args: any, ctx: any) => {
+    user: async (_: any, args: any) => {
+
+        const { id, email } = args || {};
 
         const user = await prisma.user.findUnique({
             where: {
-                id: ctx.user.id
+                id,
+                email
             }
         });
 
@@ -21,16 +24,42 @@ export const queries = {
 
         return user;
     },
-    users: async (_:any, args: any, context: any) => {
-        
-        console.log(context.user);
 
-        const { where } = args;
+    me: async (_: any, args: any, ctx: any) => {
+        return await prisma.user.findUnique({
+            where: {
+                id: ctx.user.id
+            }
+        })
+    },
+
+    searchUsers: async (_:any, args: any) => {
+        
+        const { email, name, dept } = args;
+
+        const where: any = {AND: []};
+
+        if (email)
+            where.AND.push({
+                email: {
+                    contains: email,
+                    mode: 'insensitive'
+                }
+            })
+
+        if (name)
+            where.AND.push({
+                name: {
+                    contains: name,
+                    mode: 'insensitive'
+                }
+            })
 
         return await prisma.user.findMany({
-            where,
+            where
         });
     },
+
     login: async (_: any, args: any) => {
 
         const {email, password} = args;
@@ -52,7 +81,7 @@ export const queries = {
         // @ts-ignore
         delete user.password;
 
-        const token = jwt.sign(user, config.secret, { expiresIn: '2h' });
+        const token = jwt.sign(user, config.secret);
 
         return {
             user,

@@ -9,8 +9,9 @@ type Query {
     dept(where: DeptWhereInput): Dept
     depts(where: DeptWhereInput): [Dept!]
 
-    user(where: UserWhereInput): User
-    users(where: UserWhereInput): [User!]
+    user(id: String, email: String): User
+    me: User!
+    searchUsers(email: String, name: String, deptName: String): [User!]
 
     program(where: ProgramWhereInput): Program!
     programs(where: ProgramWhereInput): [Program!]
@@ -32,6 +33,7 @@ type Query {
 
     report(where: ReportWhereInput): Report!
     reports(where: ReportWhereInput): [Report!]
+
 }
 
 type Mutation {

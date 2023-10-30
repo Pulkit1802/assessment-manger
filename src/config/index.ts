@@ -1,7 +1,6 @@
 import dotenv from 'dotenv';
 import z from 'zod';
 import path from 'path';
-import { MeiliSearch } from 'meilisearch'
 
 import { PrismaClient } from '@prisma/client';
 export const prisma = new PrismaClient();
@@ -13,8 +12,6 @@ const envSchema = z.object({
     NODE_ENV: z.enum(['dev', 'test', 'prod']).default('dev'),
     DATABASE_URL: z.string(),
     JWT_SECRET: z.string(),
-    MEILISEARCH_MASTER_KEY: z.string(),
-    MEILI_URL: z.string()
 })
 
 const env = envSchema.safeParse(process.env);
@@ -26,11 +23,6 @@ if (!env.success) {
         .join('\n')
     );
 }
-
-export const searchClient = new MeiliSearch({
-    host: env.data.MEILI_URL,
-    apiKey: env.data.MEILISEARCH_MASTER_KEY,
-});
 
 export default {
     port: env.data.PORT,
