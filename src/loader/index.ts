@@ -7,9 +7,10 @@ import morgan from "morgan";
 import cors from "cors";
 import configs from "../config";
 import logger from "../utils/logger";
-import handleFileIfAny from "../utils/file";
+import handleFileIfAny from "../middlewares/file";
 import path from "path";
 import jwt from "jsonwebtoken";
+import router from "../routes";
 
 export default async ( { app }: { app: Application } ) : Promise<http.Server> => {
 
@@ -48,38 +49,7 @@ export default async ( { app }: { app: Application } ) : Promise<http.Server> =>
         const apolloServer = await buildApolloServer(server);
         await apolloServer.start();
 
-        app.use('/file', handleFileIfAny.single('file'), (req: Request, res: Response, next: NextFunction) => {
-            try {
-                const {file} = req;
-                if (!file) throw new Error("No file found");
-                res.status(200).json({
-                    message: "File uploaded successfully",
-                    file: file.filename,
-                });
-            } catch (e) {
-                logger.error("Failed to upload file \n", e);
-                res.status(500).json({
-                    message: "Failed to upload file",
-                });
-            }
-        });
-        app.use('/down', async (req: Request, res: Response) => {
-            try {
-                const fileName = req.body.file;
-                if (!fileName)
-                    throw new Error("No File Found")
-
-                if (fileName.match(/^\/./))
-                    throw new Error("Error in file name")    
-
-                res.status(200).sendFile(path.join(__dirname, '../../uploads/'+fileName));
-            } catch (err: any) {
-                res.status(400).json({
-                    success: false,
-                    msg: err.message
-                })
-            }
-        });
+        app.use('/api', router);
         app.use('/graphql', expressMiddleware(apolloServer, {context: async ({req}) => {
             const token = req.headers.authorization || '';
             if (token === '' || !token)
