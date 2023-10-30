@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import {redirect} from 'next/navigation'
 import { FormInput } from "./input";
+import { login } from "../../api/api";
 import Link from 'next/link'
 
 export const LoginForm = () => {
@@ -22,6 +23,14 @@ export const LoginForm = () => {
 
     const handleLoginFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        const userData = login(form.email, form.password);
+        if (userData) {
+            // @ts-ignore
+            localStorage.setItem("token", userData.token);
+            // @ts-ignore
+            localStorage.setItem("user", JSON.stringify(userData.user));
+            redirect("/dashboard")
+        }
     }
 
     useEffect(() => {
@@ -43,6 +52,7 @@ export const LoginForm = () => {
                         placeholder="Email"
                         value={form.email}
                         onChange={handleInputChange}
+                        required={true}
                     />                
                 </div>
                 <div>
@@ -52,6 +62,7 @@ export const LoginForm = () => {
                         placeholder="Password"
                         value={form.password}
                         onChange={handleInputChange}
+                        required={true}
                     />
                 </div>
                 <div>

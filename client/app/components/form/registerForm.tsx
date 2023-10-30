@@ -3,6 +3,7 @@
 import { FormInput } from "./input"
 import { useState, useEffect } from "react"
 import Link from 'next/link'
+import { getDepts } from "../../api/api";
 
 export const RegisterForm = () => {
 
@@ -12,7 +13,7 @@ export const RegisterForm = () => {
         phoneNumber: "",
         password: "",
         confirmPassword: "",
-        role: "user",
+        role: "",
         deptId: ""
     });
 
@@ -38,6 +39,9 @@ export const RegisterForm = () => {
 
     const handleRegisterSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+
+
+
         console.log(form)
     }
 
@@ -55,13 +59,21 @@ export const RegisterForm = () => {
                     // @ts-ignore
                     value={form[key]}
                     onChange={handleInputChange}
+                    required={true}
                 />
             </div>
         )
     });
 
+    const handleDepts = async () => {
+        const res = await getDepts();
+        const depts = res.data.data.depts;
+        setDepts(depts)
+    }
+
     useEffect(() => {
         // fetch depts
+        handleDepts();
     }, []);
 
     return (
@@ -84,9 +96,18 @@ export const RegisterForm = () => {
                 <select className="w-full py-2 px-6 rounded-lg bg-gray-100 mt-4" name="deptId" onChange={handleSelectChange}>
                     <option value="">Select Dept</option>
                     {
-                        depts.length > 0 && depts.map((dept: any, index: number) => {
-                            <option value={dept.id} key={index}>dept.name</option>
-                        })
+                        depts.length > 0 ? (
+                            <>
+                                {
+                                    depts.map((dept: any, index: number) => {
+                                        return (
+                                            <option key={index} value={dept.id}>{dept.name}</option>
+                                        )
+                                    })
+                                }
+                            </>
+                        ) : 
+                        <></>
                     }
                 </select>
 
