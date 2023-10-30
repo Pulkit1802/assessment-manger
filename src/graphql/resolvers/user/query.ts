@@ -88,5 +88,19 @@ export const queries = {
             token
         }
 
+    },
+
+    userWatingForApproval: async (_: any, args: any, ctx: any) => {
+
+        const where = ctx.user.role === 'admin' ? {} : {
+            deptId: ctx.user.deptId
+        }
+
+        const users = await prisma.waiting_approval.findMany({
+            where
+        });
+
+        return users;
     }
+    
 }

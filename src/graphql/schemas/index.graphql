@@ -9,9 +9,10 @@ type Query {
     dept(where: DeptWhereInput): Dept
     depts(where: DeptWhereInput): [Dept!]
 
-    user(id: String, email: String): User
     me: User!
+    user(id: String, email: String): User
     searchUsers(email: String, name: String, deptName: String): [User!]
+    userWatingForApproval: [User!]
 
     program(where: ProgramWhereInput): Program!
     programs(where: ProgramWhereInput): [Program!]
@@ -43,7 +44,8 @@ type Mutation {
     deleteDept(where: DeptWhereInput): Dept!
 
     createUser(data: UserCreateInput): User!
-    uploadUsers(fileName: String!): [User!]
+    register(data: UserCreateInput!): Boolean!
+    approveUser(id: String!): Boolean!
     updateUser(where: UserWhereInput, data: UserUpdateInput): User!
     deleteUser(where: UserWhereInput): User!
 

@@ -1,8 +1,6 @@
 import { prisma } from "../../../config";
 import bcrypt from 'bcrypt';
 import ApiError from "../../../utils/apiError";
-import { filePath } from "../../../config";
-import xlsx from 'xlsx';
 
 export const mutations = {
     createUser: async (_: any, args: any) => {
@@ -20,59 +18,50 @@ export const mutations = {
 
         return user;
     },
-    uploadUsers: async (_: any, args: any) => {
 
-        const { fileName } = args;
-        const workbook = xlsx.readFile(filePath + fileName);
-        const userData = xlsx.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]]);
+    register: async (_: any, args: any) => {
+        const { data } = args || {};
+        
+        data.password = await bcrypt.hash(data.password, 10);
 
-        const emails: string[] = []
-        const phoneNumbers: string[] = []
-
-        userData.forEach((user: any) => {
-            emails.push(user.email);
-            phoneNumbers.push(user.phoneNumber);
+        const user = await prisma.waiting_approval.create({
+            data
         });
 
-        const alreadyUsers = await prisma.user.findMany({
+        // @ts-ignore
+        delete user.password;
+
+        return true;
+    },
+
+    approveUser: async (_: any, args: any) => {
+        const { id } = args || {};
+
+        const user = await prisma.waiting_approval.findUnique({
             where: {
-                OR: [
-                    {
-                        email: {
-                            in: emails
-                        }
-                    },
-                    {
-                        phoneNumber: {
-                            in: phoneNumbers
-                        }
-                    }
-                ]
-            },
+                id
+            }, 
             select: {
                 email: true,
+                name: true,
+                password: true,
                 phoneNumber: true,
+                role: true,
+                deptId: true,
             }
         });
 
-        if (alreadyUsers.length > 0) {
-            alreadyUsers.forEach((user) => {
-                while (true) {
-                    const index = userData.findIndex((u: any) => u.email === user.email || u.phoneNumber === user.phoneNumber);
-                    if (index === -1) break;
-                    userData.splice(index, 1);
-                }
-            })
-        }
+        if (!user)
+            throw new ApiError(404, 'User not found');
 
-        const users = await prisma.user.createMany({
-            // @ts-ignore
-            data: userData
-        })
+        await prisma.user.create({
+            data: user
+        });
 
-        return users;
+        return true;
 
     },
+
     updateUser: async (_: any, args: any) => {
 
         const { where, data } = args;
@@ -90,8 +79,9 @@ export const mutations = {
 
         return user;
     },
+
     deleteUser: async (_any: any, args: any) => {
         const { where } = args;
-        return await prisma.user.delete({ where });
+        return await prisma.user.deleteMany({ where });
     }
 }
