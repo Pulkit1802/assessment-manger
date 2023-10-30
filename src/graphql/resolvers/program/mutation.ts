@@ -1,11 +1,34 @@
 import { prisma } from "../../../config";
+import ApiError from "../../../utils/apiError";
 
 export  const mutations = {
-    createProgram: async (_: any, args: any) => {
+    createProgram: async (_: any, args: any, ctx: any) => {
         const { data, mapData } = args;
 
+        const dept = await prisma.dept.findUnique({
+            where: {
+                id: ctx.user.deptId
+            }, select: {
+                id: true
+            }
+        });
+
+        if (!dept) throw new ApiError(500, 'Serious Problem');
+
         let program = await prisma.program.create({
-            data
+            data: {
+                name: data.name,
+                dept: {
+                    connect: {
+                        id: dept.id
+                    }
+                
+                }, cordinator: {
+                    connect: {
+                        email: data.cordinatorEmail
+                    }
+                }
+            }
         });
 
         if (mapData && mapData.courseIds.length > 0) {
