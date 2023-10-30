@@ -70,10 +70,7 @@ export const mutations = {
             data: userData
         })
 
-        return {
-            users,
-            discarded: alreadyUsers
-        };
+        return users;
 
     },
     updateUser: async (_: any, args: any) => {

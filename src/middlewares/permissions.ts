@@ -26,7 +26,7 @@ export const permissions = shield({
         createUser: and(isAuthenticated, allow(['admin', 'hod'])),
         createCourse: and(isAuthenticated, allow(['admin'])),
         createProgram: and(isAuthenticated, allow(['hod'])),
-        attachCourse: and(isAuthenticated, allow(['pc'])),
+        attachCourses: and(isAuthenticated, allow(['pc'])),
         createSection: and(isAuthenticated, allow(['pc'])),
         // uploadUsers: and(isAuthenticated, allow(['admin', 'hod'])),
         // uploadStudents: and(isAuthenticated, allow(['admin', 'hod'])),

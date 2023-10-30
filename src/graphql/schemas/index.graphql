@@ -41,7 +41,7 @@ type Mutation {
     deleteDept(where: DeptWhereInput): Dept!
 
     createUser(data: UserCreateInput): User!
-    uploadUsers(fileName: String!): {users: [User!], discarded: [String!]}
+    uploadUsers(fileName: String!): [User!]
     updateUser(where: UserWhereInput, data: UserUpdateInput): User!
     deleteUser(where: UserWhereInput): User!
 
