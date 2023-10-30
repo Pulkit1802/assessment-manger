@@ -13,7 +13,7 @@ export const permissions = shield({
     Query: {
         login: not(isAuthenticated),
         searchDepts: or(isAuthenticated, not(isAuthenticated)),
-        depts: and(isAuthenticated, allow(['admin'])),
+        depts: or(isAuthenticated, not(isAuthenticated)),
         searchUsers: and(isAuthenticated, allow(['admin', 'hod', 'pc', 'cc'])),
         programs: and(isAuthenticated, allow(['admin'])),
         courses: and(isAuthenticated, allow(['admin'])),
