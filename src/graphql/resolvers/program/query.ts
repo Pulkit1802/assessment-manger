@@ -23,5 +23,32 @@ export const queries = {
         });
 
         return programs;
+    },
+
+    searchPrograms: async (_: any, args: any) => {
+
+        const { name, dept } = args;
+
+        const where: any = {AND: []};
+
+        if (name)
+            where.AND.push({
+                name: {
+                    contains: name,
+                    mode: 'insensitive'
+                }
+            })
+
+        if (dept)
+            where.AND.push({
+                dept: {
+                    equals: dept,
+                }
+            })
+
+        return await prisma.program.findMany({
+            where
+        });
+
     }
 }

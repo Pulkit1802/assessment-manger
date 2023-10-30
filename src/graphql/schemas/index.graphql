@@ -17,6 +17,7 @@ type Query {
 
     program(where: ProgramWhereInput): Program!
     programs(where: ProgramWhereInput): [Program!]
+    searchPrograms(name: String, dept: String): [Program!]
 
     student(where: StudentWhereInput): Student!
     students(where: StudentWhereInput): [Student!]
