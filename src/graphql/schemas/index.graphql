@@ -24,6 +24,7 @@ type Query {
 
     course(where: CourseWhereInput): Course!
     courses(where: CourseWhereInput): [Course!]
+    searchCourses(name: String, code: String): [Course!]
 
     section(where: SectionWhereInput): Section!
     sections(where: SectionWhereInput): [Section!]

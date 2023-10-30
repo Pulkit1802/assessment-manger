@@ -14,6 +14,7 @@ export const queries = {
         return course;
 
     },
+
     courses: async (_: any, args: any) => {
         const {where} = args || {};
 
@@ -22,5 +23,36 @@ export const queries = {
         });
 
         return courses;
+    },
+
+    searchCourses: async (_: any, args: any) => {
+        
+        const {name, code} = args;
+        
+        let where: any = {AND: []};
+
+        if (name)
+            where.AND.push({
+                name: {
+                    contains: name,
+                    mode: 'insensitive'
+                }
+            })
+
+        if (code)
+            where.AND.push({
+                code: {
+                    contains: code,
+                    mode: 'insensitive'
+                }
+            })
+
+        if (!where.AND.length)
+            where = {}
+
+        return await prisma.course.findMany({
+            where
+        });
+
     }
 }
