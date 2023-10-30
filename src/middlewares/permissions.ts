@@ -1,4 +1,4 @@
-import { shield, rule, and, not } from "graphql-shield";
+import { shield, rule, and, not, or } from "graphql-shield";
 
 
 const isAuthenticated = rule({cache: "contextual"})(async (parent, args, ctx, info) => {
@@ -12,6 +12,7 @@ const allow = (allowedRoles: string[]) => rule({cache: "contextual"})(async (par
 export const permissions = shield({
     Query: {
         login: not(isAuthenticated),
+        searchDepts: or(isAuthenticated, not(isAuthenticated)),
         depts: and(isAuthenticated, allow(['admin'])),
         searchUsers: and(isAuthenticated, allow(['admin', 'hod', 'pc', 'cc'])),
         programs: and(isAuthenticated, allow(['admin'])),
@@ -28,7 +29,6 @@ export const permissions = shield({
         createProgram: and(isAuthenticated, allow(['hod'])),
         attachCourses: and(isAuthenticated, allow(['pc'])),
         createSection: and(isAuthenticated, allow(['pc'])),
-        // uploadUsers: and(isAuthenticated, allow(['admin', 'hod'])),
-        // uploadStudents: and(isAuthenticated, allow(['admin', 'hod'])),
+        '*': isAuthenticated,
     }
 })
