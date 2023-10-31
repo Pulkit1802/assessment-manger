@@ -47,7 +47,7 @@ type Mutation {
     deleteDept(id: ID!): Dept!
 
     createUser(data: UserCreateInput): User!
-    register(data: UserCreateInput!): Boolean!
+    register(data: UserCreateInput): User!
     approveUser(id: String!): Boolean!
     updateUser(where: UserWhereInput, data: UserUpdateInput): User!
     deleteUser(where: UserWhereInput): User!

@@ -48,3 +48,23 @@ export const login = async (email: string, password: string) => {
 
     return await graphqlApi.post('/', { query });
 };
+
+export const waitlist = async () => {
+
+    const query = `
+        query {
+            userWatingForApproval {
+                id
+                name
+                email
+                role
+                dept {
+                  name
+                }
+              }
+        }
+    `;
+
+    return await graphqlApi.post('/', { query });
+
+}

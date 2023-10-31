@@ -21,6 +21,15 @@ export const mutations = {
 
     register: async (_: any, args: any) => {
         const { data } = args || {};
+
+        const checkUser = await prisma.user.findUnique({
+            where: {
+                email: data.email
+            }
+        });
+
+        if (checkUser)
+            throw new ApiError(400, 'User already exists');
         
         data.password = await bcrypt.hash(data.password, 10);
 
@@ -31,7 +40,7 @@ export const mutations = {
         // @ts-ignore
         delete user.password;
 
-        return true;
+        return user;
     },
 
     approveUser: async (_: any, args: any) => {

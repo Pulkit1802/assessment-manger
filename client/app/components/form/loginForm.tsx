@@ -1,8 +1,9 @@
 "use client";
+
 import { useState, useEffect } from "react";
-import {redirect} from 'next/navigation'
+import {redirect, useRouter} from 'next/navigation'
 import { FormInput } from "./input";
-import { login } from "../../api/api";
+import { login } from "../../api/query";
 import Link from 'next/link'
 
 export const LoginForm = () => {
@@ -11,6 +12,8 @@ export const LoginForm = () => {
         email: "",
         password: ""
     });
+
+    const router = useRouter();
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setForm(prev => {
@@ -21,22 +24,33 @@ export const LoginForm = () => {
         })
     }
 
-    const handleLoginFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleLoginFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        const userData = login(form.email, form.password);
-        if (userData) {
-            // @ts-ignore
-            localStorage.setItem("token", userData.token);
-            // @ts-ignore
-            localStorage.setItem("user", JSON.stringify(userData.user));
-            redirect("/dashboard")
+        const userData = await login(form.email, form.password);
+        const user = userData.data.data
+        try {
+            if (user) {
+                // @ts-ignore
+                localStorage.setItem("token", user.login.token);
+                // @ts-ignore
+                localStorage.setItem("user", JSON.stringify(user.login.user));
+                // setTimeout(() => {
+                    // console.log("Login Success");
+                router.push("/dashboard/"+user.login.user.role.toLowerCase())
+                // }, 1000)
+            } else {
+                console.log("Login Failed");
+            }
+        } catch (err) {
+            console.log(err);
         }
+        
     }
 
     useEffect(() => {
-        const token = localStorage.getItem("token");
-        if (token)
-            redirect("/dashboard")
+        const user = localStorage.getItem("user");
+        if (user) 
+            redirect("/dashboard/"+JSON.parse(user).role.toLowerCase())
     })
     
     return (

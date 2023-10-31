@@ -2,11 +2,10 @@
 
 import { FormInput } from "./input"
 import { useState, useEffect } from "react"
-import Link from 'next/link'
 import { getDepts } from "../../api/query";
-import { register } from "@/app/api/mutation";
+import { newUser } from "@/app/api/mutation";
 
-export const RegisterForm = () => {
+export const CreateUserForm = () => {
 
     const [form, setForm] = useState({
         name: "",
@@ -32,7 +31,7 @@ export const RegisterForm = () => {
     const handleRegisterSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        const res = await register(form)
+        const res = await newUser(form)
 
         console.log(res)
     }
@@ -58,11 +57,13 @@ export const RegisterForm = () => {
     });
 
     const handleDepts = async () => {
-        const res = await getDepts();
         try {
-            const depts = res.data.data.depts;
-            console.log(depts)
-            setDepts(depts)
+            const res = await getDepts();
+
+            if (res.data.data && res.data.data.depts.length > 0)
+                setDepts(depts)
+            else
+                setDepts([])
         } catch (error) {
             console.log(error)
         }
@@ -77,7 +78,7 @@ export const RegisterForm = () => {
         <div>
             <form className="py-8 px-20 bg-white rounded-2xl text-sky-600 flex flex-col items-center justify-center" onSubmit={handleRegisterSubmit}>
 
-                <p className="text-3xl font-semibold text-center mb-8 ">Request An Account</p>
+                <p className="text-3xl font-semibold text-center mb-8 ">Create User</p>
 
                 {...formInputs}
 
@@ -110,13 +111,9 @@ export const RegisterForm = () => {
 
                 <div className="w-full mt-4">
                     <button type="submit" className="w-full text-center py-2 rounded-lg font-medium text-xl text-sky-600 border border-sky-400 transition-all duration-300
-                    hover:text-gray-100 hover:bg-sky-600 hover:border-sky-600">Register</button>
+                    hover:text-gray-100 hover:bg-sky-600 hover:border-sky-600">Create</button>
                 </div>
-                <div className="mt-4">
-                    <p className="text-gray-800 text-center">Have An Account? 
-                        <Link href={'/login'} className="ml-2 text-sky-600">LogIn</Link>
-                    </p>
-                </div>
+                
             </form>
         </div>
     )

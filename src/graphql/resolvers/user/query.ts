@@ -92,13 +92,11 @@ export const queries = {
 
     userWatingForApproval: async (_: any, args: any, ctx: any) => {
 
-        const where = ctx.user.role === 'admin' ? {} : {
-            deptId: ctx.user.deptId
-        }
+        // const where = ctx.user.role === 'admin' ? {} : {
+            // deptId: ctx.user.deptId
+        // }
 
-        const users = await prisma.waiting_approval.findMany({
-            where
-        });
+        const users = await prisma.waiting_approval.findMany();
 
         return users;
     }
