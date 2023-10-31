@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { CreateUserForm } from "../form/createUserForm";
 import { CreateDeptForm } from "../form/createDeptForm";
+import { CreateProgramForm } from "../form/createProgramForm";
+import { CreateCourseForm } from "../form/createCourseForm";
 import { Approval } from "./approval";
 
 export const CreationManager = () => {
@@ -23,6 +25,7 @@ export const CreationManager = () => {
                     <option value="user">User</option>
                     <option value="dept">Department</option>
                     <option value="course">Course</option>
+                    <option value="program">Program</option>
                 </select>    
             </div>
             
@@ -40,6 +43,16 @@ export const CreationManager = () => {
                 {
                     actitivity === "dept" && (
                         <CreateDeptForm />
+                    )
+                }
+                {
+                    actitivity === "course" && (
+                        <CreateCourseForm />
+                    )
+                }
+                {
+                    actitivity === "program" && (
+                        <CreateProgramForm />
                     )
                 }
             </div>

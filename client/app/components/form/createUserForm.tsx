@@ -61,7 +61,7 @@ export const CreateUserForm = () => {
             const res = await getDepts();
 
             if (res.data.data && res.data.data.depts.length > 0)
-                setDepts(depts)
+                setDepts(res.data.data.depts)
             else
                 setDepts([])
         } catch (error) {

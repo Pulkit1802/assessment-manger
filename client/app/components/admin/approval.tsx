@@ -20,7 +20,7 @@ export const Approval = () => {
     const getPendingUsers = async () => {
         try {
             const res = await waitlist();
-            console.log(res.data);
+            // console.log(res.data);
             if (res.data.data) {
                 const pendingUsers = res.data.data.userWatingForApproval;
                 setPeindingUsers(pendingUsers);
