@@ -5,14 +5,15 @@ import { CreateUserForm } from "../form/createUserForm";
 import { CreateDeptForm } from "../form/createDeptForm";
 import { CreateProgramForm } from "../form/createProgramForm";
 import { CreateCourseForm } from "../form/createCourseForm";
+import { CreateSectionForm } from "../form/createSectionForm";
 import { Approval } from "./approval";
 
 export const CreationManager = () => {
 
-    const [actitivity, setActitivity] = useState("approval")
+    const [activity, setactivity] = useState("approval")
 
     const formChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        setActitivity(e.target.value)
+        setactivity(e.target.value)
     }
 
     return (
@@ -26,33 +27,39 @@ export const CreationManager = () => {
                     <option value="dept">Department</option>
                     <option value="course">Course</option>
                     <option value="program">Program</option>
+                    <option value="section">Section</option>
                 </select>    
             </div>
             
             <div className="w-4/6 mx-auto">
                 {
-                    actitivity === "approval" && (
+                    activity === "approval" && (
                         <Approval />
                     )
                 }
                 {
-                    actitivity === "user" && (
+                    activity === "user" && (
                         <CreateUserForm />
                     )
                 }
                 {
-                    actitivity === "dept" && (
+                    activity === "dept" && (
                         <CreateDeptForm />
                     )
                 }
                 {
-                    actitivity === "course" && (
+                    activity === "course" && (
                         <CreateCourseForm />
                     )
                 }
                 {
-                    actitivity === "program" && (
+                    activity === "program" && (
                         <CreateProgramForm />
+                    )
+                }
+                {
+                    activity === "section" && (
+                        <CreateSectionForm />
                     )
                 }
             </div>
