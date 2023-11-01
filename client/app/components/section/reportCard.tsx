@@ -1,4 +1,13 @@
+
+import {useState, useEffect} from "react";
+
 export const ReportCard = ({reportData}: any) => {
+
+    const [report, setReport] = useState<any>(null);
+
+    const fetchReport = async () => {
+        
+    }
 
     return (
         <div className="bg-gray-200 text-lg text-gray-800 shadow-md py-8 px-6
