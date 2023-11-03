@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { FormInput } from './input';
-import { createDept } from '../../api/mutation';
+import { getDepts, getPrograms } from '../../api/query';
+import { createSection } from '../../api/mutation';
 
 export const CreateSectionForm = (props: any) => {
 
@@ -9,13 +10,17 @@ export const CreateSectionForm = (props: any) => {
         batch: "",
         semester: "",
         facultyEmail: "",
+        courseCode: "",
         programId: "",
     });
 
     const [programs, setPrograms] = useState<any>([])
+    const [deptId, setDeptId] = useState<any>("")
+    const [depts, setDepts] = useState<any>([])
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         setForm(prev => {
+            console.log(e.target.name, e.target.value);
             return {
                 ...prev,
                 [e.target.name]: e.target.value
@@ -25,7 +30,7 @@ export const CreateSectionForm = (props: any) => {
 
     const formInputs = Object.keys(form).map((key, index) => {
 
-        if (key === "programId")
+        if (key === "programId" || key === "deptId")
             return <></>
 
         return (
@@ -45,50 +50,99 @@ export const CreateSectionForm = (props: any) => {
 
     const handleRegisterSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-
-
-        // try {
-        //     const res = await createDept(dept)
-        //     if(res.data.data && res.data.data.createDept) {
-        //         console.log(res.data.data.createDept);
-        //     }
-        // } catch (err) {
-        //     console.log(err);
-        // }
+        
+        try {
+            const res = await createSection(form);
+            console.log(res.data); 
+        } catch (err) {
+            console.log(err);
+        }
 
     }
 
-    const getPrograms = async () => {
+    const fetchPrograms = async (deptId: string) => {
         // TODO: get programs
+
+        try {
+
+            const res = await getPrograms(deptId);
+            if(res.data.data && res.data.data.programs) {
+                setPrograms(res.data.data.programs)
+            }
+
+        } catch (err) {
+            console.log(err);
+        }
+
+    }
+
+    const handleDeptIdSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        setDeptId(e.target.value);
+        fetchPrograms(e.target.value);
+    }
+
+    const fetchDepts = async () => {
+        try {
+            const res = await getDepts();
+            if(res.data.data && res.data.data.depts) {
+                setDepts(res.data.data.depts)
+            }
+        } catch (err) {
+            console.log(err);
+        }
+    
     }
 
     useEffect(() => {
-        getPrograms();
+        fetchDepts();
     }, [])
 
     return (
         <div>
             <form className="py-8 px-20 bg-white rounded-2xl text-sky-600 flex flex-col items-center justify-center" onSubmit={handleRegisterSubmit}>
-                <p className="text-3xl font-semibold text-center mb-8 ">Add New Department</p>
+                <p className="text-3xl font-semibold text-center mb-8 ">Add New Section</p>
                 { ...formInputs}
 
-                <select className="w-full py-2 px-6 rounded-lg bg-gray-100 mt-4" name="deptId" onChange={handleInputChange}>
-                    <option value="">Select Program</option>
-                    {
-                        (programs && programs.length) > 0 ? (
-                            <>
-                                {
-                                    programs.map((program: any, index: number) => {
-                                        return (
-                                            <option key={index} value={program.id}>{program.name}</option>
-                                        )
-                                    })
-                                }
-                            </>
-                        ) : 
-                        <></>
-                    }
-                </select>
+                <div>
+
+                    <select className="w-full py-2 px-6 rounded-lg bg-gray-100 mt-4" name="deptId" onChange={handleDeptIdSelect}>
+                        <option value="">Select Dept</option>
+                        {
+                            depts && depts.length > 0 && (
+                                <>
+                                    {
+                                        depts.map((dept: any, index: number) => {
+                                            return (
+                                                <option key={index} value={dept.id}>{dept.name}</option>
+                                            )
+                                        })
+                                    }
+                                </>
+                            ) 
+                        }
+                    </select>
+
+                    <select className="w-full py-2 px-6 rounded-lg bg-gray-100 mt-4" name="programId" onChange={handleInputChange}>
+                        <option value="">
+                            {deptId ? "Select Program" : "Select Department First"}
+                        </option>
+                        {
+                            (programs && programs.length) > 0 ? (
+                                <>
+                                    {
+                                        programs.map((program: any, index: number) => {
+                                            return (
+                                                <option key={index} value={program.id}>{program.name}</option>
+                                            )
+                                        })
+                                    }
+                                </>
+                            ) : 
+                            <></>
+                        }
+                    </select>
+
+                </div>
 
             <div className="w-full mt-4">
                 <button type="submit" className="w-full text-center py-2 rounded-lg font-medium text-xl text-sky-600 border border-sky-400 transition-all duration-300

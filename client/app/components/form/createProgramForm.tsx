@@ -3,12 +3,13 @@
 import { FormInput } from "./input"
 import { useState, useEffect } from "react"
 import { getDepts } from "../../api/query";
-import { newUser } from "@/app/api/mutation";
+import { createProgram } from "../../api/mutation";
 
 export const CreateProgramForm = () => {
 
     const [form, setForm] = useState({
         name: "",
+        cordinatorEmail: "",
         deptId: ""
     });
 
@@ -21,14 +22,6 @@ export const CreateProgramForm = () => {
                 [e.target.name]: e.target.value
             }
         })
-    }
-
-    const handleRegisterSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-
-        const res = await newUser(form)
-
-        console.log(res)
     }
 
     const formInputs = Object.keys(form).map((key, index) => {
@@ -58,6 +51,16 @@ export const CreateProgramForm = () => {
                 setDepts(res.data.data.depts)
             else
                 setDepts([])
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const handleRegisterSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        try {
+            const res = await createProgram(form);
+            console.log(res);
         } catch (error) {
             console.log(error)
         }

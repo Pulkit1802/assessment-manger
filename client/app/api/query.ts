@@ -9,14 +9,12 @@ const graphqlApi = axios.create({
     },
 });
 
-// const graphqlApiWithAuth = axios.create({
-//     baseURL: process.env.NEXT_APP_GRAPHQL_API_URL,
-//     method: 'POST',
-//     headers: {
-//         'Content-Type': 'application/json',
-//         'Authorization': `Bearer ${localStorage.getItem('token')}`,
-//     },
-// });
+const graphqlApiWithAuth = axios.create({
+    baseURL: process.env.NEXT_PUBLIC_GRAPHQL_API_URL,
+    headers: {
+        'Content-Type': 'application/json',
+    },
+});
 
 export const getDepts = async () => {
     const query = `
@@ -49,6 +47,46 @@ export const login = async (email: string, password: string) => {
     return await graphqlApi.post('/', { query });
 };
 
+export const getSerctions = async () => {
+
+    const query = `
+        query {
+            sections {
+                id
+                batch
+            }
+        }
+    `;
+    
+    graphqlApiWithAuth.defaults.headers['Authorization'] = `Bearer ${localStorage.getItem('token')}`;
+
+    return await graphqlApiWithAuth.post('/', { query });
+
+}
+
+export const getSection = async (id: string) => {
+
+    const query = `
+        query {
+            section(where: {id: "${id}"}) {
+                id
+                batch
+                course {
+                    name
+                    tests {
+                        name
+                        markUploadDeadLine
+                    }
+                }
+            }
+        }
+    `;
+
+    graphqlApiWithAuth.defaults.headers['Authorization'] = `Bearer ${localStorage.getItem('token')}`;
+    return await graphqlApiWithAuth.post('/', { query });
+
+}
+
 export const waitlist = async () => {
 
     const query = `
@@ -66,5 +104,21 @@ export const waitlist = async () => {
     `;
 
     return await graphqlApi.post('/', { query });
+
+}
+
+
+export const getPrograms = async (deptId: string) => {
+
+    const query = `
+        query {
+            programs(where: {deptId: "${deptId}"}) {
+                id
+                name
+            }
+        }
+    `;
+
+    return await graphqlApi.post('/', { query }); 
 
 }

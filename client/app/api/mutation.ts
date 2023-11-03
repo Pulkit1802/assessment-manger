@@ -4,6 +4,7 @@ const graphqlApi = axios.create({
     baseURL: process.env.NEXT_PUBLIC_GRAPHQL_API_URL,
     headers: {
         'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('token')}`,
     },
 });
 
@@ -54,4 +55,33 @@ export const createDept = async (data: any) => {
     `;
 
     return await graphqlApi.post('/', { query });
+}
+
+export const createProgram = async (data: any) => {
+
+    const query = `
+        mutation CreateProgram($data: ProgramCreateInput!) {
+            createProgram(data: $data) {
+                name
+            }
+        }
+    `;
+
+    return await graphqlApi.post('/', { query, variables: { data } });
+
+}
+
+export const createSection = async (data: any) => {
+    
+    data.semester = parseInt(data.semester);
+
+    const query = `
+        mutation CreateSection($data: SectionCreateInput!) {
+            createSection(data: $data) {
+                roomNo
+            }
+        }
+    `;
+
+    return await graphqlApi.post('/', { query, variables: { data } });
 }
