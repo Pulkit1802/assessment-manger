@@ -22,7 +22,7 @@ export const queries = {
     },
     sections: async (_: any, args: any, ctx: any) => {
 
-        console.log(args)
+        // console.log(args)
 
         const {where} = args || {};
 

@@ -7,8 +7,6 @@ import morgan from "morgan";
 import cors from "cors";
 import configs from "../config";
 import logger from "../utils/logger";
-import handleFileIfAny from "../middlewares/file";
-import path from "path";
 import jwt from "jsonwebtoken";
 import router from "../routes";
 
