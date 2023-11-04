@@ -6,7 +6,7 @@ export const uploadFile = async (file: File) => {
     const formData = new FormData();
     formData.append("file", file);
 
-    const response = await axios.post("/api/file", formData, {
+    const response = await axios.post(process.env.NEXT_PUBLIC_REST_API_URL+"/file", {"file": file}, {
         headers: {
             "Content-Type": "multipart/form-data",
         },
@@ -18,9 +18,11 @@ export const uploadFile = async (file: File) => {
 
 export const downloadFile = async (fileName: string) => {
 
-    const response = await axios.get(`/api/file?fileName=${fileName}`, {
+    const response = await axios.get(process.env.NEXT_PUBLIC_REST_API_URL+`/file?fileName=${fileName}`
+    , {
         responseType: "blob",
-    });
+    }
+    );
 
     return response.data;
 

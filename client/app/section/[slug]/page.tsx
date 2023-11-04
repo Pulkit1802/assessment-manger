@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import { TestCard } from "../../components/section/testCard";
 import { ReportCard } from "../../components/section/reportCard";
-import { getSection } from "../../api/query";
+import { getSection, getSectionReports } from "../../api/query";
 
 export default function Page() {
 
@@ -19,12 +19,13 @@ export default function Page() {
         
         try {
             const res = await getSection(params.slug);
-            console.log(res)
             if (res.data.data && res.data.data.section) {
                 setSection(res.data.data.section)
                 setTests(res.data.data.section.course.tests);
-                setReports(res.data.data.section.reports);
             }
+            const sectionReports = await getSectionReports(params.slug)
+            if (sectionReports.data.data && sectionReports.data.data.reports)
+                setReports(sectionReports.data.data.reports)
         } catch (error) {
             console.log(error)
         }
@@ -32,9 +33,6 @@ export default function Page() {
     }
 
     useEffect(() => {
-
-        console.log(params)
-
         if(params.slug) {
             setSectionId(params.slug);
             fetchSections();
@@ -43,7 +41,7 @@ export default function Page() {
 
     return (
         <div className="min-h-screen bg-gray-300">
-            <NavBar links={[{href: "/sections", name: "Sections"}, {href: "/create", name: "Add"}]} />
+            <NavBar links={[{href: "/section", name: "Sections"}, {href: "/create", name: "Add"}]} />
 
             <div className="w-10/12 mx-auto">
             {
@@ -63,15 +61,20 @@ export default function Page() {
             }
 
             {
-                section && section.reports && section.reports.length > 0 && (
-                    <div className="grid grid-cols-4 gap-4 p-4">
+                reports && reports.length > 0 && (
+                    <>
                         <p className="text-2xl">Reports</p>
-                        {
-                            section.reports.map((report: any, index: number) => {
-                                return <ReportCard key={index} reportData={report} />
-                            })
-                        }
-                    </div>
+                        <div className="grid grid-cols-4 gap-4 p-4">
+
+                            {
+                                reports.map((report: any, index: number) => {
+                                    console.log(report)
+                                    return <ReportCard key={index} reportData={report} />
+                                })
+                            }
+                        </div>
+                    </>
+                    
                 )
             }
 

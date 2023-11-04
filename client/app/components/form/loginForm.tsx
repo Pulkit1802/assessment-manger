@@ -36,7 +36,7 @@ export const LoginForm = () => {
                 localStorage.setItem("user", JSON.stringify(user.login.user));
                 // setTimeout(() => {
                     // console.log("Login Success");
-                router.push("/dashboard/"+user.login.user.role.toLowerCase())
+                router.push("/section")
                 // }, 1000)
             } else {
                 console.log("Login Failed");

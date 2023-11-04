@@ -85,3 +85,44 @@ export const createSection = async (data: any) => {
 
     return await graphqlApi.post('/', { query, variables: { data } });
 }
+
+export const generateReport = async (data: any) => {
+    console.log(data)
+    const query = `
+        UploadMarking($data: MarkingUploadInput) {
+            uploadMarking(data: $data) {
+                id
+            }
+        } 
+    `
+
+    return await graphqlApi.post('/', { query, variables: { data } });
+
+}
+
+
+export const createReport = async (data: any) => {
+
+    console.log(data)
+
+    const query = `
+        mutation CreateReport($data: ReportCreateInput) {
+            createReport(data: $data) {
+                id
+                name
+                studentsAboveRequiredPercentage
+                totalStudents
+                avgMarks
+                type
+                questionsReport {
+                    id
+                    avgMarks
+                    studentsAboveRequiredPercentage
+                    studentsAttempted
+                }
+            }
+        }
+    `
+    return await graphqlApi.post('/', { query, variables: { data } });
+
+}

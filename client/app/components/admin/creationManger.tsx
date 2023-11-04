@@ -6,6 +6,7 @@ import { CreateDeptForm } from "../form/createDeptForm";
 import { CreateProgramForm } from "../form/createProgramForm";
 import { CreateCourseForm } from "../form/createCourseForm";
 import { CreateSectionForm } from "../form/createSectionForm";
+import { CreateTestForm } from "../form/createTestForm";
 import { Approval } from "./approval";
 
 export const CreationManager = () => {
@@ -28,6 +29,7 @@ export const CreationManager = () => {
                     <option value="course">Course</option>
                     <option value="program">Program</option>
                     <option value="section">Section</option>
+                    {/* <option value="test">Test</option> */}
                 </select>    
             </div>
             
@@ -62,6 +64,11 @@ export const CreationManager = () => {
                         <CreateSectionForm />
                     )
                 }
+                {/* {
+                    activity === "test" && (
+                        <CreateTestForm />
+                    )
+                } */}
             </div>
             
         </div>
