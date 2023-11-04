@@ -6,6 +6,7 @@ import ApiError from "../utils/apiError";
 
 const fileUpload = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const file = req.file;
+    // console.log(file)
     if (!file)
         throw new ApiError(400, "No file uploaded");
     res.status(200).json({
@@ -16,7 +17,9 @@ const fileUpload = catchAsync(async (req: Request, res: Response, next: NextFunc
 
 const sendFile = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     // check if file exists in directory
+    // console.log("hello")
     const { fileName } = req.query;
+    console.log(req.query, req.params)
     if (!fileName)
         throw new ApiError(400, "File name not provided");
     

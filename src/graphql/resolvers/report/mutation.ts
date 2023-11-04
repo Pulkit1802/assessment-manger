@@ -1,3 +1,4 @@
+import test from "node:test";
 import { prisma } from "../../../config";
 import ApiError from "../../../utils/apiError";
 
@@ -227,6 +228,33 @@ const genSectionReport = async (data: any) => {
         console.log(questionWiseReportData);
         aboveReqPercentage /= questionWiseReportData.length;
 
+        const section = await prisma.section.findUnique({
+            where: {
+                id: data.sectionId
+            },
+            select: {
+                course: {
+                    select: {
+                        attainments: true
+                    }
+                },
+            }
+        })
+
+        if (!section)
+            console.log("hello")
+
+        const course = section?.course;
+
+        let attainmentLevel = 0
+
+        if (course?.attainments.length) {
+            for(const attainment of course.attainments) {
+                if (attainment.reqPercentage < ((+aboveReqPercentage)/(+totalStudents)) && attainment.attainmentValue > attainmentLevel )
+                    attainmentLevel = attainment.attainmentValue
+            }
+        }
+
         try {
             await prisma.report.create({
                 data: {
@@ -238,7 +266,7 @@ const genSectionReport = async (data: any) => {
                     totalStudents: +totalStudents,
                     avgMarks: Number(reportTotalAvgMarks / questionIds.length),
                     studentsAboveRequiredPercentage: aboveReqPercentage,
-                    coAttainmentLevel: 0,
+                    coAttainmentLevel: attainmentLevel,
                     questionsReport: {
                         createMany: {
                             data: questionWiseReportData,
@@ -397,6 +425,19 @@ const genProgramReport = async (data: any) => {
         avgStudentAboveReqPercentage /= reportsForTheObjective.length;
 
         // get attainments for the test course wise
+
+        const test = await prisma.test.findUnique({
+            where: {
+                id: data.id,
+            },
+            select: {
+                course: {
+                    select: {
+                        attainments: true
+                    }
+                }
+            }
+        })
 
         try {
             await prisma.report.create({

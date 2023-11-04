@@ -3,7 +3,7 @@ import { prisma } from "../../../config";
 export const mutations = {
     createDept: async (_: any, args: any) => {
         const { data } = args;
-
+        console.log(data);
         return await prisma.dept.create({
             data
         });

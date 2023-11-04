@@ -84,7 +84,7 @@ export const mutations = {
 
         const {data} = args || {};
         const {sectionId, testId, fileUrl} = data;
-
+        console.log(data)
         const testDetails = await prisma.test.findUnique({
             where: {
                 id: testId,
@@ -194,7 +194,7 @@ export const mutations = {
                 },
             });
 
-            // console.log(studentQuestionWiseMarks);
+            console.log(studentQuestionWiseMarks);
 
         })
 

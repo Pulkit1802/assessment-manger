@@ -5,12 +5,14 @@ export const queries = {
     section: async (_: any, args: any, ctx: any) => {
         const {where} = args;
 
+        if (!ctx.user) throw new ApiError(401, "Unauthorized");
+
         if (!where || !where.id)
             throw new ApiError(400, "Section id not provided");
 
         const section = prisma.section.findFirst({
             where: {
-                facultyId: ctx.user.id,
+                // facultyId: ctx.user.id,
                 ...where
             },
         });
@@ -22,7 +24,9 @@ export const queries = {
     },
     sections: async (_: any, args: any, ctx: any) => {
 
-        // console.log(args)
+        console.log(args, ctx)
+
+        if (!ctx.user) throw new ApiError(401, "Unauthorized");
 
         const {where} = args || {};
 

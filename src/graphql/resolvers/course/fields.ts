@@ -55,6 +55,19 @@ export const fields = {
             if (!sections) return [];
 
             return sections.map((s: any) => s.faculty);
+        },
+        tests: async (parent: any, _: any) => {
+            const tests = await prisma.test.findMany({
+                where: {
+                    courseId: parent.id
+                }
+            });
+
+            tests.forEach((t: any) => {
+                t.markUploadDeadLine = `${t.markUploadDeadLine}`;
+            });
+
+            return tests
         }
     }
 }

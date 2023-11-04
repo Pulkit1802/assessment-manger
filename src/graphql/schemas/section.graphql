@@ -19,8 +19,8 @@ input SectionCreateInput {
     roomNo: String!
     batch: String!
     semester: Int!
-    facultyId: ID!
-    courseId: ID!
+    facultyEmail: String!
+    courseCode: String!
     programId: ID!
 }
 

@@ -4,26 +4,54 @@ import ApiError from "../../../utils/apiError";
 export const mutations = {
     createSection: async (_: any, args: any) => {
         const {data} = args;
+        console.log("hello");
 
-        const program = await prisma.program.findFirst({
-            where: {
-                id: data.programId,
-                programCourses: {
-                    some: {
-                        id: data.courseId
-                    }
+        // const program = await prisma.program.findFirst({
+        //     where: {
+        //         id: data.programId,
+        //         programCourses: {
+        //             some: {
+        //                 code: data.courseCode
+        //             }
+        //         }
+        //     }
+        // });
+
+        // if (!program)
+        //     throw new ApiError(400, 'Course Not Found In Program')
+
+        try {
+            const section = await prisma.section.create({
+                data: {
+                    roomNo: data.roomNo,
+                    batch: data.batch,
+                    semester: data.semester,
+                    program: {
+                        connect: {
+                            id: data.programId
+                        }
+                    },
+                    course: {
+                        connect: {
+                            code: data.courseCode
+                        }
+                    },
+                    faculty: {
+                        connect: {
+                            email: data.facultyEmail
+                        }
+                    },
+    
                 }
-            }
-        });
+            });
+    
+            return section;
+        } catch (error) {
+            console.log(error);
+            return null
+        }
 
-        if (!program)
-            throw new ApiError(400, 'Course Not Found In Program')
-
-        const section = await prisma.section.create({
-            data
-        });
-
-        return section;
+        
     },
     
     updateSection: async (_: any, args: any) => {

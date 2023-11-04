@@ -53,7 +53,9 @@ export default async ( { app }: { app: Application } ) : Promise<http.Server> =>
             if (token === '' || !token)
                 return { user: null };
 
+            // console.log(token.split(' ')[1]);
             const user = jwt.verify(token.split(' ')[1], configs.secret);
+            // console.log(token.split(' ')[1]);
             return { user };
         }}));
 

@@ -13,6 +13,7 @@ type Program {
 input ProgramCreateInput {
     name: String!
     cordinatorEmail: String!
+    deptId: ID!
 }
 
 input ProgramCourseMapInput {

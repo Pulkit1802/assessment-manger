@@ -80,8 +80,12 @@ export const queries = {
 
         // @ts-ignore
         delete user.password;
+        // @ts-ignore
+        delete user.createdAt;
+        // @ts-ignore
+        delete user.updatedAt;
 
-        const token = jwt.sign(user, config.secret);
+        const token = jwt.sign(user, config.secret, {expiresIn: '1d'});
 
         return {
             user,
