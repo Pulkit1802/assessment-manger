@@ -15,7 +15,7 @@ export const FormInput = (
             placeholder={placeholder}
             value={value}
             onChange={onChange}
-            className="outline-none py-2 px-6 border border-sky-600 rounded-xl focus:outline-none"
+            className="outline-none fold:w-56 py-2 px-6 border border-[#5BE4A8] rounded-xl focus:outline-none"
             required={required}
         />
     )
