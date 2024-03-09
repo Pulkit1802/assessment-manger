@@ -98,8 +98,8 @@ export const CreateSectionForm = (props: any) => {
     }, [])
 
     return (
-        <div>
-            <form className="py-8 px-20 bg-white rounded-2xl text-sky-600 flex flex-col items-center justify-center" onSubmit={handleRegisterSubmit}>
+        <div className='flex flex-col justify-center items-center'>
+            <form className="py-10 px-5  2xl:py-8 2xl:px-28 w-72 md:w-[40rem] xl:w-[60rem] bg-white rounded-2xl text-[#227135] flex flex-col items-center justify-center" onSubmit={handleRegisterSubmit}>
                 <p className="text-3xl font-semibold text-center mb-8 ">Add New Section</p>
                 { ...formInputs}
 
@@ -145,8 +145,8 @@ export const CreateSectionForm = (props: any) => {
                 </div>
 
             <div className="w-full mt-4">
-                <button type="submit" className="w-full text-center py-2 rounded-lg font-medium text-xl text-sky-600 border border-sky-400 transition-all duration-300
-                hover:text-gray-100 hover:bg-sky-600 hover:border-sky-600">Create</button>
+                <button type="submit" className="w-full text-center py-2 rounded-lg font-medium text-xl text-[#227135] border border-[#227135] transition-all duration-300
+                hover:text-white hover:bg-[#227135] hover:border-[#227135]">Create</button>
             </div>
 
             </form>
