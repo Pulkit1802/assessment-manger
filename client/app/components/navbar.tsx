@@ -22,8 +22,8 @@ export const NavBar = ({links=[]}: {links?: any}) => {
 
     return (
         <div className="pt-4 text-lg">
-            <div className="flex items-center justify-between px-12 py-4 top-4 shadow-md rounded-full bg-gray-300 shadow-gray-700 w-10/12 mx-auto">
-            <div className="text-sky-800 font-semibold">
+            <div className="flex items-center justify-between px-12 py-4 top-4 shadow-md rounded-full bg-[#5BE4A8]  w-10/12 mx-auto">
+            <div className="text-white 2xl:text-2xl font-semibold">
                 {user.name || "User"}
             </div>
             
@@ -34,7 +34,7 @@ export const NavBar = ({links=[]}: {links?: any}) => {
                             {
                                 links.map((link: any, index: number) => {
                                     return (
-                                        <Link key={index} href={link.href} className="text-sky-600 hover:text-sky-800 transition-all duration-300">{link.name}</Link>
+                                        <Link key={index} href={link.href} className="text-white font-bold 2xl:text-3xl hover:text-[#deff66] transition-all duration-300">{link.name}</Link>
                                     )
                                 })
                             }
@@ -44,8 +44,8 @@ export const NavBar = ({links=[]}: {links?: any}) => {
             </div>
 
             <div>
-                <div className="text-sky-700 font-medium py-1 px-4 rounded-xl transition-colors duration-300 border border-sky-700
-                hover:bg-sky-700 hover:text-gray-200 hover:cursor-pointer" onClick={handleLogout}>Logout</div>
+                <div className="text-white 2xl:text-xl font-medium py-1 px-4 rounded-xl transition-colors duration-300 border border-white shadow-md
+                hover:bg-[#deff66] hover:border-[#deff66] hover:text-[purple] hover:cursor-pointer" onClick={handleLogout}>Logout</div>
             </div>
         </div>
         </div>

@@ -34,7 +34,7 @@ export default function Page() {
     }, [])
 
     return (
-        <div className="min-h-screen bg-gray-300">
+        <div className="min-h-screen bg-gray-300 ">
             <NavBar links={[{href: "create", name: "Add"}]} />
             <div className="mt-12 w-10/12 mx-auto">
             {
