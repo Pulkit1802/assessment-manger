@@ -17,7 +17,7 @@ export const TestCard = ({testData}: any) => {
         try {
             const res = await generateMarksheet(testData.id, router.slug)
 
-            console.log(res)
+            // console.log(res)
 
             if (res.data.data && res.data.data.downloadMarking) {
                 const downFile = await downloadFile(res.data.data.downloadMarking)
@@ -51,15 +51,19 @@ export const TestCard = ({testData}: any) => {
         e.preventDefault()
         if (file) {
 
+            console.log(router.slug)
+
             try {
                 const uploaded_file = await uploadFile(file)
                 // if (uploaded_file.status === 'success') 
                 console.log(uploaded_file)
-                generateReport({
+                const res = await generateReport({
                     sectionId: router.slug,
                     testId: testData.id,
                     fileUrl: uploaded_file.file.filename,
                 });
+
+                console.log(res)
 
                 setRefreshMarkings(p => p*-1)
 
@@ -77,7 +81,7 @@ export const TestCard = ({testData}: any) => {
                 testId: testData.id
             })
 
-            console.log(markings)
+            // console.log(markings)
 
             if (markings.data.data && markings.data.data.markings)
                 setMarkings(markings.data.data.markings)
@@ -90,10 +94,10 @@ export const TestCard = ({testData}: any) => {
     const generateSectionReport = async () => {
         try {
             const report = await createReport({
-                name: "CT1-Report",
+                name: testData.name,
                 type: "section",
-                testId: "cloil650g0001gvc220ozffkk",
-                sectionId: "cloicnk3v0001gvsm67fdjte3",
+                testId: testData.id,
+                sectionId: router.slug,
             });
             
             console.log(report.data.data)

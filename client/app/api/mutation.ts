@@ -102,16 +102,16 @@ export const createSection = async (data: any) => {
 }
 
 export const generateReport = async (data: any) => {
-    console.log(data)
+    console.log(data);
     const query = `
-        UploadMarking($data: MarkingUploadInput) {
-            uploadMarking(data: $data) {
+        mutation UploadMarking($uploadMarkingData2: MarkingUploadInput) {
+            uploadMarking(data: $uploadMarkingData2) {
                 id
             }
-        } 
-    `
+        }
+    `;
 
-    return await graphqlApi.post('/', { query, variables: { data } });
+    return await graphqlApi.post('/', { query, variables: { uploadMarkingData2: data } });
 
 }
 
@@ -181,5 +181,33 @@ export const createReport = async (data: any) => {
         }
     `
     return await graphqlApi.post('/', { query, variables: { data } });
+
+}
+
+export const getSectionTestMarking = async (data: any) => {
+
+    const query = `
+        query Markings($where: MarkingWhereInput) {
+            markings(where: $where) {
+            id
+            questionWiseMarksObtained {
+                marksObtained
+                question {
+                    maxMarks
+                    name
+                    objective
+                    part {
+                        name
+                    }
+                }
+            }
+            student {
+                regNo
+            }
+            }
+        }
+    `
+
+    return await graphqlApi.post('/', { query, variables: { ...data } });
 
 }

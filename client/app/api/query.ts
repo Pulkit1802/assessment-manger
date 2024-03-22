@@ -54,6 +54,8 @@ export const getSerctions = async () => {
             sections {
                 id
                 batch
+                roomNo
+                semester
             }
         }
     `;
@@ -71,6 +73,8 @@ export const getSection = async (id: string) => {
             section(where: {id: "${id}"}) {
                 id
                 batch
+                roomNo
+                semester
                 course {
                     name
                     tests {
@@ -90,19 +94,19 @@ export const getSection = async (id: string) => {
 
 export const getSectionReports = async (sectionId: string) => {
     const query = `
-        query {
-            reports(where: {sectionId: "${sectionId}"}) {
+        query Reports($where: ReportWhereInput) {
+            reports(where: $where)  {
                 name
+                id
                 objective
                 avgMarks
-                totalStudents
-                studentsAboveRequiredPercentage
                 coAttainmentLevel
+                studentsAboveRequiredPercentage
             }
         }
     `;
 
-    return await graphqlApiWithAuth.post('/', { query });
+    return await graphqlApiWithAuth.post('/', { query, variables: { where: { sectionId } } });
 } 
 
 export const waitlist = async () => {

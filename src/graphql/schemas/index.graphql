@@ -80,6 +80,7 @@ type Mutation {
     uploadMarking(data: MarkingUploadInput): [Marking!]
     downloadMarking(sectionId: ID!, testId: ID!): String!
     deleteMarking(where: MarkingWhereInput): Marking!
+    deleteMarkings: Boolean! 
 
     createReport(data: ReportCreateInput): [Report!]
     deleteReport(where: ReportWhereInput): Report!

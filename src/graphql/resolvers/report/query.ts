@@ -5,6 +5,8 @@ export const queries = {
     report: async (_: any, args: any) => {
         const {where} = args || {}
 
+        console.log(where)
+
         const report = await prisma.report.findFirst({
             where
         })
@@ -17,11 +19,15 @@ export const queries = {
     reports: async (_: any, args: any) => {
         const {where} = args || {}
 
-        console.log(where);
+        // console.log('report', where);
 
-        return await prisma.report.findMany({
+        const reports = await prisma.report.findMany({
             where
         });
+
+        console.log(reports);
+
+        return reports;
 
     }
 }

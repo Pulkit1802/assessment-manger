@@ -5,78 +5,91 @@ import path from "path";
 
 export const mutations = {
     createMarking: async (_: any, args: any) => {
-        const {data} = args || {};
-        const {questionMarks} = data;
 
-        const testDetails = await prisma.test.findUnique({
-            where: {
-                id: data.testId,
-            },
-            include: {
-                parts: {
-                    include: {
-                        questions: true,
-                    }
+        try {
+
+            console.log("ola komo estas?")
+
+            const {data} = args || {};
+            const {questionMarks} = data;
+
+            const testDetails = await prisma.test.findUnique({
+                where: {
+                    id: data.testId,
                 },
-            },
-        });
-
-        if (!testDetails)
-            throw new ApiError(404, "Test not found");
-
-        const {parts} = testDetails;
-        
-        parts.forEach(async (part: any) => {
-            const {questions} = part;
-            const partQuestionMarks = questionMarks.filter((questionMark: any) => questionMark.partId == part.id);
-            if (partQuestionMarks.length < part.requiredQuestions) {
-
-                const diff = part.requiredQuestions - partQuestionMarks.length;
-                const unmarkedQuestion = questions.filter((question: any) => {
-                    const questionMark = partQuestionMarks.find((questionMark: any) => questionMark.questionId == question.id);
-                    return !questionMark;
-                });
-
-                for(let i=0; i < diff; i++) {
-                    questionMarks.push({
-                        questionId: unmarkedQuestion[i].id,
-                        partId: part.id,
-                        marksObtained: 0,
-                    });
-                }
-
-            } else if (partQuestionMarks.length > part.requiredQuestions) {
-                while (partQuestionMarks.length > part.requiredQuestions) {
-                    let leastMarkQuestionIndex = 0;
-                    for (let i=1; i<partQuestionMarks.length; i++) {
-                        if (partQuestionMarks[i].marksObtained < partQuestionMarks[leastMarkQuestionIndex].marksObtained)
-                            leastMarkQuestionIndex = i;
-                    }
-                    delete partQuestionMarks[leastMarkQuestionIndex];
-                }
-            }
-        });
-
-        // @ts-ignore
-        delete data.questionMarks;
-
-        const totalMarks = questionMarks.reduce((acc: any, questionMark: any) => acc + questionMark.marksObtained, 0);
-
-        console.log(questionMarks);
-
-        const marking = await prisma.marking.create({
-            data:{
-                ...data,
-                totalMarksObtained: totalMarks,
-                questionWiseMarksObtained: {
-                    createMany: {
-                        data: questionMarks,
+                include: {
+                    parts: {
+                        include: {
+                            questions: true,
+                        }
                     },
                 },
-            },
-        });
+            });
 
-        return marking
+            // console.log(testDetails);
+
+            if (!testDetails)
+                throw new ApiError(404, "Test not found");
+
+            const {parts} = testDetails;
+
+            // console.log(parts);
+            
+            parts.forEach(async (part: any) => {
+                const {questions} = part;
+                const partQuestionMarks = questionMarks.filter((questionMark: any) => questionMark.partId == part.id);
+                if (partQuestionMarks.length < part.requiredQuestions) {
+
+                    const diff = part.requiredQuestions - partQuestionMarks.length;
+                    const unmarkedQuestion = questions.filter((question: any) => {
+                        const questionMark = partQuestionMarks.find((questionMark: any) => questionMark.questionId == question.id);
+                        return !questionMark;
+                    });
+
+                    for(let i=0; i < diff; i++) {
+                        questionMarks.push({
+                            questionId: unmarkedQuestion[i].id,
+                            partId: part.id,
+                            marksObtained: 0,
+                        });
+                    }
+
+                } else if (partQuestionMarks.length > part.requiredQuestions) {
+                    while (partQuestionMarks.length > part.requiredQuestions) {
+                        let leastMarkQuestionIndex = 0;
+                        for (let i=1; i<partQuestionMarks.length; i++) {
+                            if (partQuestionMarks[i].marksObtained < partQuestionMarks[leastMarkQuestionIndex].marksObtained)
+                                leastMarkQuestionIndex = i;
+                        }
+                        delete partQuestionMarks[leastMarkQuestionIndex];
+                    }
+                }
+            });
+
+            // @ts-ignore
+            delete data.questionMarks;
+
+            const totalMarks = questionMarks.reduce((acc: any, questionMark: any) => acc + questionMark.marksObtained, 0);
+
+            // console.log(questionMarks);
+
+            const marking = await prisma.marking.create({
+                data:{
+                    ...data,
+                    totalMarksObtained: totalMarks,
+                    questionWiseMarksObtained: {
+                        createMany: {
+                            data: questionMarks,
+                        },
+                    },
+                },
+            });
+
+            return marking;
+        } catch (err) {
+            console.log(err);
+            throw new ApiError(500, "Failed to create marking");
+        }
 
     },
 
@@ -84,7 +97,6 @@ export const mutations = {
 
         const {data} = args || {};
         const {sectionId, testId, fileUrl} = data;
-        console.log(data)
         const testDetails = await prisma.test.findUnique({
             where: {
                 id: testId,
@@ -93,6 +105,7 @@ export const mutations = {
                 parts: {
                     select: {
                         id: true,
+                        name: true,
                         requiredQuestions: true,
                         questions: true,
                     }
@@ -115,7 +128,7 @@ export const mutations = {
         if (!sectionStudents)
             throw new ApiError(404, "Section not found");
 
-        console.log()
+        // console.log(sectionStudents)
 
         const workbook = xlsx.readFile(path.join(__dirname + './../../../../uploads/'+fileUrl));
         const sheet = workbook.Sheets[workbook.SheetNames[0]];
@@ -124,13 +137,22 @@ export const mutations = {
         const {parts} = testDetails;
         const {students} = sectionStudents;
 
-        // console.log(students)
+        // console.log(studentMarking)
+
+        // return await prisma.marking.findMany({
+        //     where: {
+        //         testId: testId,
+        //         sectionId: sectionId,
+        //     }
+        // });
     
         studentMarking.forEach(async (studentMark: any) => {
 
             const student = students.find((student: any) => student.regNo == studentMark.regNo);
             if (!student)
                 throw new ApiError(404, "Student not found");
+
+            // console.log(student);
 
             const studentQuestionWiseMarks: any[] = [];
             let totalMarksObtained = 0;
@@ -144,13 +166,17 @@ export const mutations = {
 
                 questions.forEach((question: any) => {
 
-                    if (studentMark[question.name]) {
+                    let key = part.name+'_'+question.name;
+
+                    console.log(key, studentMark[key])
+
+                    if (studentMark[key]) {
                         thisPartMarks.push({
                             partId: id,
                             questionId: question.id,
-                            marksObtained: (+studentMark[question.name]),
+                            marksObtained: (+studentMark[key]),
                         });
-                        totalMarksObtained += (+studentMark[question.name]);
+                        totalMarksObtained += (+studentMark[key]);
                     } else {
                         unmarkedQuestion.push(question);
                     }
@@ -194,7 +220,7 @@ export const mutations = {
                 },
             });
 
-            console.log(studentQuestionWiseMarks);
+            // console.log(studentQuestionWiseMarks);
 
         })
 
@@ -217,7 +243,8 @@ export const mutations = {
             select: {
                 parts: {
                     select: {
-                        questions: true
+                        questions: true,
+                        name: true
                     }
                 }
             }
@@ -250,7 +277,8 @@ export const mutations = {
             const {questions} = part;
 
             questions.forEach((question: any) => {
-                convertedQuestionToKeys[question.name] = ''
+                let key=part.name+'_'+question.name
+                convertedQuestionToKeys[key] = ''
             })
 
         })
@@ -290,5 +318,11 @@ export const mutations = {
             where
         });
 
-    }
+    },
+
+    deleteMarkings: async (_: any, args: any) => {
+        await prisma.questionMarking.deleteMany()
+        await prisma.marking.deleteMany();
+        return true;
+    },
 };

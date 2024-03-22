@@ -2,7 +2,7 @@ type QuestionReport {
     id: String!
     avgMarks: Float!
     studentsAttempted: Int!
-    studentsAboveRequiredPercentage: Int!
+    studentsAboveRequiredPercentage: Float!
 
     question: Question!
     report: Report!

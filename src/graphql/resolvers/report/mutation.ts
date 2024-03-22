@@ -6,6 +6,8 @@ export const mutations = {
     createReport: async (_:any, args: any) => {
         const {data} = args
 
+        console.log(data)
+
         let reports: any = [];
 
         if (data.type === "section") {

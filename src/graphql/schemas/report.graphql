@@ -5,7 +5,7 @@ type Report {
     objective: Int!
     avgMarks: Float!
     totalStudents: Int!
-    studentsAboveRequiredPercentage: Int!
+    studentsAboveRequiredPercentage: Float!
     coAttainmentLevel: Float!
     sectionId: ID!
 

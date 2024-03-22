@@ -8,7 +8,11 @@ export const fields = {
                     markingId: parent.id
                 },
                 include: {
-                    question: true
+                    question: {
+                        include: {
+                            part: true
+                        }
+                    },
                 }
             });
         },

@@ -19,11 +19,13 @@ export default function Page() {
         
         try {
             const res = await getSection(params.slug);
+            // console.log(res)
             if (res.data.data && res.data.data.section) {
                 setSection(res.data.data.section)
                 setTests(res.data.data.section.course.tests);
             }
             const sectionReports = await getSectionReports(params.slug)
+            console.log(sectionReports)
             if (sectionReports.data.data && sectionReports.data.data.reports)
                 setReports(sectionReports.data.data.reports)
         } catch (error) {
@@ -68,7 +70,7 @@ export default function Page() {
 
                             {
                                 reports.map((report: any, index: number) => {
-                                    console.log(report)
+                                    // console.log(report)
                                     return <ReportCard key={index} reportData={report} />
                                 })
                             }
