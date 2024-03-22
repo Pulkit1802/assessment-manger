@@ -4,7 +4,6 @@ import ApiError from "../../../utils/apiError";
 export const mutations = {
     createSection: async (_: any, args: any) => {
         const {data} = args;
-        console.log("hello");
 
         // const program = await prisma.program.findFirst({
         //     where: {

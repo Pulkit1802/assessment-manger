@@ -142,14 +142,16 @@ export const getPrograms = async (deptId: string) => {
 }
 
 export const generateMarksheet = async (testId: string, sectionId: string) => {
+
+    console.log(testId, sectionId);
     
-        const query = `
-            mutation DownloadMarking($sectionId: ID!, $testId: ID!) {
-                downloadMarking(sectionId: $sectionId, testId: $testId)
-            }
-        `;
-    
-        return await graphqlApi.post('/', { query, variables: { sectionId, testId } }); 
+    const query = `
+        mutation DownloadMarking($sectionId: ID!, $testId: ID!) {
+            downloadMarking(sectionId: $sectionId, testId: $testId)
+        }
+    `;
+
+    return await graphqlApi.post('/', { query, variables: { sectionId, testId } }); 
     
 }
 

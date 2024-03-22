@@ -57,7 +57,7 @@ type Mutation {
     deleteProgram(where: ProgramWhereInput): Program!
     attachCourses(where: ProgramWhereInput, mapData: ProgramCourseMapInput): Program!
 
-    createStudent(data: StudentCreateInput): Student!
+    createStudent(data: [StudentCreateInput]): [Student!]
     updateStudent(where: StudentWhereInput, data: StudentUpdateInput): Student!
     deleteStudent(where: StudentWhereInput): Student!
     attachSections(where: StudentWhereInput, mapData: StudentSectionMapInput): Student!

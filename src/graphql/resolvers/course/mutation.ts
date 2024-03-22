@@ -4,8 +4,32 @@ export const mutations = {
     createCourse: async (_: any, args: any) => {
         const { data, mapData } = args;
 
+        // console.log("data", data);
+
+        const cordinator = await prisma.user.findUnique(
+            {
+                "where": {
+                    "email": data.cordinatorEmail
+                }
+            }
+        )
+
+        console.log("cordinator", !cordinator);
+
+        if (!cordinator) {
+            throw new Error("Invalid Cordinator Email");
+        }
+
+        if (!cordinator.role.includes('cc')) {
+            throw new Error("Invalid Cordinator Role");
+        }
+
         let course = await prisma.course.create({
-            data
+            "data": {
+                "cordinatorId": cordinator.id,
+                "code": data.code,
+                "name": data.name,
+            }
         });
 
         if (mapData && mapData.programIds.length > 0) {

@@ -16,6 +16,9 @@ export const TestCard = ({testData}: any) => {
 
         try {
             const res = await generateMarksheet(testData.id, router.slug)
+
+            console.log(res)
+
             if (res.data.data && res.data.data.downloadMarking) {
                 const downFile = await downloadFile(res.data.data.downloadMarking)
                 

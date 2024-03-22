@@ -24,9 +24,7 @@ export const register = async (data: any) => {
 export const approveUser = async (id: string) => {
     const query = `
         mutation {
-            approveUser(id: "${id}") {
-                
-            }
+            approveUser(id: "${id}")
         }
     `;
 
@@ -71,6 +69,23 @@ export const createProgram = async (data: any) => {
 
 }
 
+export const createCourse = async (name: string, code: string, cordinatorEmail: string) => {
+
+    const query = `
+        mutation CreateCourse($data: CourseCreateInput!) {
+            createCourse(data: $data) {
+                name
+                code
+            }
+        }
+    `;
+
+    const data = { name, code, cordinatorEmail };
+
+    return await graphqlApi.post('/', { query, variables: { data } });
+
+}
+
 export const createSection = async (data: any) => {
     
     data.semester = parseInt(data.semester);
@@ -98,6 +113,48 @@ export const generateReport = async (data: any) => {
 
     return await graphqlApi.post('/', { query, variables: { data } });
 
+}
+
+export const createTest = async (data: any) => {
+    
+        console.log(data)
+
+        const query = `
+            mutation CreateTest($data: TestCreateInput) {
+                createTest(data: $data) {
+                    id
+                }
+            }
+        `
+
+        /* 
+            Variable "$data" got invalid value "60" at "data.requiredPercentage"; Float cannot represent non numeric value: "60"
+            Variable "$data" got invalid value "1" at "data.maxMarks"; Int cannot represent non-integer value: "1"
+            Variable "$data" got invalid value "1" at "data.totalParts"; Int cannot represent non-integer value: "1"
+            Variable "$data" got invalid value "1" at "data.parts[0].maxQuestions"; Int cannot represent non-integer value: "1"
+            Variable "$data" got invalid value "1" at "data.parts[0].requiredQuestions"; Int cannot represent non-integer value: "1"
+            Variable "$data" got invalid value "1" at "data.parts[0].maxMarks"; Int cannot represent non-integer value: "1"
+        */
+
+        data.requiredPercentage = parseFloat(data.requiredPercentage);
+        data.maxMarks = parseInt(data.maxMarks);
+        data.totalParts = parseInt(data.totalParts);
+        data.parts.forEach((part: any) => {
+            part.maxQuestions = parseInt(part.maxQuestions);
+            part.requiredQuestions = parseInt(part.requiredQuestions);
+            part.maxMarks = parseInt(part.maxMarks);
+
+            part.questions.forEach((question: any) => {
+                question.maxMarks = parseInt(question.maxMarks);
+                question.objective = parseInt(question.objective);
+            })
+
+        });
+
+        
+        return await graphqlApi.post('/', { query, variables: { data } });
+    
+    
 }
 
 

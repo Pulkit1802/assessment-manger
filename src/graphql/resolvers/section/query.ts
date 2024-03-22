@@ -26,13 +26,13 @@ export const queries = {
 
         console.log(args, ctx)
 
-        if (!ctx.user) throw new ApiError(401, "Unauthorized");
+        // if (!ctx.user) throw new ApiError(401, "Unauthorized");
 
         const {where} = args || {};
 
         const sections = prisma.section.findMany({
             where: {
-                facultyId: ctx.user.id,
+                // facultyId: ctx.user.id,
                 ...where
             },
         });

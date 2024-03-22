@@ -1,6 +1,7 @@
 import { prisma } from "../../../config";
 import bcrypt from 'bcrypt';
 import ApiError from "../../../utils/apiError";
+import { date } from "zod";
 
 export const mutations = {
     createUser: async (_: any, args: any) => {
@@ -46,6 +47,8 @@ export const mutations = {
     approveUser: async (_: any, args: any) => {
         const { id } = args || {};
 
+        console.log(id)
+
         const user = await prisma.waiting_approval.findUnique({
             where: {
                 id
@@ -66,6 +69,12 @@ export const mutations = {
         await prisma.user.create({
             data: user
         });
+
+        await prisma.waiting_approval.delete({
+            "where": {
+                "email": user.email
+            }
+        })
 
         return true;
 

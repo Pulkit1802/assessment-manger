@@ -3,13 +3,14 @@
 import { FormInput } from "./input"
 import { useState, useEffect } from "react"
 import { getDepts } from "../../api/query";
-import { newUser } from "@/app/api/mutation";
+import { createCourse } from "@/app/api/mutation";
 
 export const CreateCourseForm = () => {
 
     const [form, setForm] = useState({
         name: "",
-        code: ""
+        code: "",
+        cordinatorEmail: "",
     });
 
 
@@ -25,15 +26,15 @@ export const CreateCourseForm = () => {
     const handleRegisterSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        const res = await newUser(form)
+        const res = await createCourse(form.name, form.code, form.cordinatorEmail)
 
         console.log(res)
     }
 
     const formInputs = Object.keys(form).map((key, index) => {
 
-        if (key === "role" || key === "deptId")
-            return <></>
+        // if (key === "role" || key === "deptId")
+        //     return <></>
 
         return (
             <div key={index} className="mb-4">
@@ -54,7 +55,7 @@ export const CreateCourseForm = () => {
         <div className="flex flex-col justify-center items-center">
             <form className="py-10 px-5  2xl:py-8 2xl:px-28 w-72 md:w-[40rem] xl:w-[60rem] bg-white rounded-2xl text-[#227135] flex flex-col items-center justify-center" onSubmit={handleRegisterSubmit}>
 
-                <p className="text-3xl font-semibold text-center mb-8 ">Create Program</p>
+                <p className="text-3xl font-semibold text-center mb-8 ">Create Course</p>
 
                 {...formInputs}
 

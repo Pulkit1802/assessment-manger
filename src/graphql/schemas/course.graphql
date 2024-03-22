@@ -16,7 +16,7 @@ type Course {
 input CourseCreateInput {
     name: String!
     code: String!
-    cordinatorId: String!
+    cordinatorEmail: String!
 }
 
 input CourseUpdateInput {

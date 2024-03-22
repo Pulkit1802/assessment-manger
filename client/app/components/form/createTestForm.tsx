@@ -1,11 +1,15 @@
+"use client"
+
 import { FormEvent, useState, useEffect }from "react"
 import { FormInput } from "./input"
+import { createTest } from "@/app/api/mutation"
 
 export const CreateTestForm = () => {
 
     const [test, setTest] = useState<any>({
         name: "",
         requiredPercentage: "",
+        courseCode: "",
         maxMarks: "",
         totalParts: "",
         parts: []
@@ -16,7 +20,6 @@ export const CreateTestForm = () => {
         maxQuestions: "",
         requiredQuestions: "",
         maxMarks: "",
-        questions: []
     })
 
     const [question, setQuestion] = useState({
@@ -119,17 +122,17 @@ export const CreateTestForm = () => {
 
     const addPartToTest = (e: FormEvent) => {
         e.preventDefault()
-        const newPart = part;
-        newPart.maxMarks = parseInt(newPart.maxMarks);
-        newPart.requiredQuestions = parseInt(newPart.requiredQuestions);
-        newPart.maxQuestions = parseInt(newPart.maxQuestions);
-        const newParts = test.parts
-        newParts.push(newPart)
-
+        
         setTest((prev: any) => {
+            const existingPart = prev.parts.find((p: any) => p.name === part.name);
+            if (existingPart) {
+            console.log("Part with the same name already exists");
+            return prev;
+            }
+
             return {
-                ...prev,
-                parts: newParts,
+            ...prev,
+            parts: [...prev.parts, part]
             }
         })
 
@@ -141,47 +144,56 @@ export const CreateTestForm = () => {
 
     const addQuestionToPart = (e: FormEvent) => {
         e.preventDefault()
-        const partName = question.partName
-        console.log(partName)
+        const partName = question.partName;
+        console.log(partName);
         const newQuestion: any = question;
-        newQuestion.maxMarks = parseInt(newQuestion.maxMarks)
-        newQuestion.objective = parseInt(newQuestion.objective)
-        const partInd = test.parts.findIndex((part: any) => part.name === partName)
-        delete newQuestion.partName
-        const newQuestions = test.parts[partInd].questions
-        newQuestions.push(newQuestion)
+        newQuestion.maxMarks = parseInt(newQuestion.maxMarks);
+        newQuestion.objective = parseInt(newQuestion.objective);
+        const partInd = test.parts.findIndex((part: any) => part.name === partName);
+        const thisQuestionPartName = newQuestion.partName;
+        delete newQuestion.partName;
+        const newQuestions = test.parts[partInd]?.questions || [];
+        const existingQuestionIndex = newQuestions.findIndex((q: any) => q.name === newQuestion.name);
+        if (existingQuestionIndex !== -1) {
+            console.log("Question with the same name already exists in the part");
+            return;
+        }
+        newQuestions.push(newQuestion);
 
         setTest((prev: any) => {
-
-            const newTest = prev;
-
+            const newTest = { ...prev };
             const updateParts = newTest.parts.map((part: any) => {
-                if (part.name !== partName)
-                    return part;
+                if (part.name !== partName) return part;
                 return {
                     ...part,
-                    questions: newQuestions
-                }
-            })
-
-            console.log(updateParts)
-
+                    questions: newQuestions,
+                };
+            });
+            console.log(updateParts);
             return {
                 ...prev,
-                parts: updateParts
-            }
+                parts: updateParts,
+            };
+        });
 
+        setQuestion((prev: any) => {
+            return {
+                ...prev,
+                partName: thisQuestionPartName
+            }
         })
 
         setTimeout(() => {
-            console.log(test)
-        }, 500)
+            console.log(test);
+        }, 500);
 
     }
 
     const createNewTest = async (e: FormEvent) => {
         e.preventDefault()
-        console.log(test)
+        // console.log(test)
+        const res = await createTest(test)
+        console.log(res)
     }
 
     useEffect(() => {

@@ -17,8 +17,7 @@ input TestCreateInput {
     name: String!
     requiredPercentage: Float!
     maxMarks: Int!
-    courseId: ID!
-    markUploadDeadLine: String!
+    courseCode: ID!
     totalParts: Int!
     parts: [PartCreateInput!]
 }

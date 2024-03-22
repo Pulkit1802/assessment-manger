@@ -6,6 +6,8 @@ export const mutations = {
         const {data} = args;
         const {parts} = data;
 
+        console.log(data);
+
         if (parts.length != data.totalParts)
             throw new ApiError(400, "Parts count mismatch");
 
@@ -14,9 +16,17 @@ export const mutations = {
         delete data.markUploadDeadLine,
         data.markUploadDeadline = new Date().toISOString();
 
+        const courseCode = data.courseCode;
+        delete data.courseCode;
+
         const test = await prisma.test.create({
             data:{
                 ...data,
+                course: {
+                    connect: {
+                        code: courseCode,
+                    }
+                },
             },
         });
 

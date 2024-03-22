@@ -11,7 +11,7 @@ import { Approval } from "./approval";
 
 export const CreationManager = () => {
 
-    const [activity, setactivity] = useState("approval")
+    const [activity, setactivity] = useState("test")
 
     const formChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         setactivity(e.target.value)
@@ -29,7 +29,7 @@ export const CreationManager = () => {
                     <option value="course">Course</option>
                     <option value="program">Program</option>
                     <option value="section">Section</option>
-                    {/* <option value="test">Test</option> */}
+                    <option value="test">Test</option>
                 </select>    
             </div>
             
@@ -64,11 +64,11 @@ export const CreationManager = () => {
                         <CreateSectionForm />
                     )
                 }
-                {/* {
+                {
                     activity === "test" && (
                         <CreateTestForm />
                     )
-                } */}
+                }
             </div>
             
         </div>

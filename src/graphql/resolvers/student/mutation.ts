@@ -2,13 +2,23 @@ import { prisma } from "../../../config";
 
 export const mutations = {
     createStudent: async (_: any, args: any) => {
-        const {data} = args;
 
-        const student = await prisma.student.create({
-            data
-        });
+        try {
+            const {data} = args;
 
-        return student;
+            console.log(data);
+
+            const student = await prisma.student.createMany({
+                data
+            });
+
+            return student;
+
+        } catch (error) {
+            console.log(error);
+            throw new Error('An error occurred while creating student');
+        }
+        
     },
     
     updateStudent: async (_: any, args: any) => {
