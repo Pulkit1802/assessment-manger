@@ -53,7 +53,7 @@ export const createDept = async (data: any) => {
             }
         }
     `;
-
+        console.log(data);
     return await graphqlApi.post('/', { query });
 }
 

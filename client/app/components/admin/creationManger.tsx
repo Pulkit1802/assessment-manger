@@ -20,7 +20,7 @@ export const CreationManager = () => {
     return (
         <div className="w-10/12 mx-auto mt-8 bg-gray-100 text-gray-800 py-8 flex flex-col justify-center items-center">
 
-            <div className="flex flex-col w-72 md:w-[40rem] xl:w-[60rem] rounded-lg py-4  justify-center items-center space-x-4 bg-white mb-4">
+            <div className="flex flex-col w-72 md:w-[40rem] xl:w-[60rem]  rounded-lg py-4  justify-center items-center space-x-4 bg-white mb-4">
                 <p className="text-2xl font-medium text-[#227135] mb-2">Select Form</p>
                 <select onChange={formChange} className="py-1 px-6 mx-auto bg-gray-200 rounded-lg">
                     <option value="approval">Reg Requests</option>

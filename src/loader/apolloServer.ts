@@ -21,7 +21,7 @@ export const buildApolloServer = async (httpServer: Server, serverOptions?: Base
             // ),
             typeDefs,
             resolvers,
-            introspection: configs.env === "dev" ? true : false,
+            introspection:  true,
             plugins: [ApolloServerPluginDrainHttpServer({httpServer})],
             ...serverOptions
         });

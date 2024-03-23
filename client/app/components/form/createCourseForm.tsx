@@ -54,7 +54,7 @@ export const CreateCourseForm = () => {
         <div className="flex flex-col justify-center items-center">
             <form className="py-10 px-5  2xl:py-8 2xl:px-28 w-72 md:w-[40rem] xl:w-[60rem] bg-white rounded-2xl text-[#227135] flex flex-col items-center justify-center" onSubmit={handleRegisterSubmit}>
 
-                <p className="text-3xl font-semibold text-center mb-8 ">Create Program</p>
+                <p className="text-3xl font-semibold text-center mb-8 ">Create Course</p>
 
                 {...formInputs}
 

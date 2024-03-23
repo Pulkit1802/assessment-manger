@@ -93,6 +93,12 @@ export const CreateUserForm = () => {
 
                 <select className="w-full py-2 px-6 rounded-lg bg-gray-100 mt-4" name="deptId" onChange={handleInputChange}>
                     <option value="">Select Dept</option>
+                    <option value="DSBS">DSBS</option>
+                    <option value="AIML">AIML</option>
+                    <option value="CORE">CORE</option>
+                    <option value="NWC">NWC</option>
+                    <option value="CINTEL">CINTEL</option>
+                    <option value="CTECH">CTECH</option>
                     {
                         (depts && depts.length) > 0 ? (
                             <>
