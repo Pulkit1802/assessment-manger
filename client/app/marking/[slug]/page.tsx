@@ -17,7 +17,7 @@ export default function Page() {
     const params = useParams();
 
     const getMarkingData = async () => {
-        const res = await getSectionTestMarking({ "id": params.slug });
+        const res = await getSectionTestMarking({ "testId": params.slug });
         console.log(res.data.data.markings);
         if (res.data.data && res.data.data.markings) {
             processData(res.data.data.markings);
@@ -54,8 +54,6 @@ export default function Page() {
                     {label: '9-12',
                     value: 0},
                     {label: '13-16',
-                    value: 0},
-                    {label: '17-20',
                     value: 0},
                 ]
             })
@@ -115,7 +113,7 @@ export default function Page() {
                     {
                         subparts.map((subpart: any, index: number) => {
                             return (
-                                <div key={index} className="flex flex-col justify-center items-center justify-center text-black">
+                                <div key={index} className="flex flex-col justify-center items-center text-black">
                                     <PieChart
                                         series={[{ data: subpart.subparts }]}
                                         width={300}

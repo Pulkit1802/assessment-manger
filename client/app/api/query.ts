@@ -77,12 +77,35 @@ export const getSection = async (id: string) => {
                 semester
                 course {
                     name
+                    code
                     tests {
                         id
                         name
                         markUploadDeadLine
                     }
                 }
+            }
+        }
+    `;
+
+    graphqlApiWithAuth.defaults.headers['Authorization'] = `Bearer ${localStorage.getItem('token')}`;
+    return await graphqlApiWithAuth.post('/', { query });
+
+}
+
+export const getSectionCourse = async (id: string) => {
+
+    const query = `
+        query {
+            course(where: {id: "${id}"}) {
+                name
+                code
+                tests {
+                    id
+                    name
+                    markUploadDeadLine
+                }
+
             }
         }
     `;
@@ -107,6 +130,23 @@ export const getSectionReports = async (sectionId: string) => {
     `;
 
     return await graphqlApiWithAuth.post('/', { query, variables: { where: { sectionId } } });
+} 
+
+export const getCourseReport = async (courseId: string) => {
+    const query = `
+        query Reports($where: ReportWhereInput) {
+            reports(where: $where)  {
+                name
+                id
+                objective
+                avgMarks
+                coAttainmentLevel
+                studentsAboveRequiredPercentage
+            }
+        }
+    `;
+
+    return await graphqlApiWithAuth.post('/', { query, variables: { where: { courseId } } });
 } 
 
 export const waitlist = async () => {
@@ -175,3 +215,48 @@ export const getSectionTestMarking = async (markingsWhere2: any) => {
     return await graphqlApi.post('/', { query, variables: { markingsWhere2 } }); 
 
 }
+
+export const getReportById = async (where) => {
+    
+    const query = `
+        query Reports($where: ReportWhereInput) {
+            report(where: $where) {
+            totalStudents
+            avgMarks
+            coAttainmentLevel
+            studentsAboveRequiredPercentage
+            objective
+            questionsReport {
+                id
+                studentsAboveRequiredPercentage
+                studentsAttempted
+                question {
+                    name
+                    part {
+                        name
+                    }
+                }
+            }
+            }
+        }
+    `;
+
+    return await graphqlApi.post('/', { query, variables: { where } });
+
+}
+
+export const getCourses = async () => {
+    
+    const query = `
+    query Courses {
+            courses {
+                id
+                code
+                name
+            }
+        }
+    `;
+
+    return await graphqlApiWithAuth.post('/', { query });
+}
+

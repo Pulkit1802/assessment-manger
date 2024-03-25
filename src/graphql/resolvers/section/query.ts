@@ -30,9 +30,11 @@ export const queries = {
 
         const {where} = args || {};
 
+        console.log(where);
+
         const sections = prisma.section.findMany({
             where: {
-                // facultyId: ctx.user.id,
+                facultyId: ctx.user.id,
                 ...where
             },
         });

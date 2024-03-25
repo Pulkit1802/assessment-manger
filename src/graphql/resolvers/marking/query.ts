@@ -15,6 +15,9 @@ export const queries = {
     },
     markings: async (_: any, args: any) => {
         const { where } = args || {};
+
+        console.log(where)
+
         const marking = await prisma.marking.findMany({
             where,
         });

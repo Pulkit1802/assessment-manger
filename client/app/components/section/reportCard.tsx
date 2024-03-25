@@ -12,14 +12,17 @@ export const ReportCard = ({reportData}: any) => {
     }
 
     return (
-        <div className="bg-gray-200 text-lg text-gray-800 shadow-md py-8 px-6
-        hover:shadow-lg hover:bg-gray-100 hover:cursor-pointer" onClick={fetchReport}>
+        <div className="bg-gray-200 text-lg text-gray-800 shadow-md py-8 px-6">
+            <div className="flex flex-col justify-between h-full">
             <div className="flex flex-col justify-start">
                 <p>Name: {reportData.name}</p>
                 <p>Objective: {reportData.objective}</p>
                 <p>Average Marks: {reportData.avgMarks}</p>
                 <p>Total Students: {reportData.totalStudents}</p>
                 <p>Student Reaching Attainment: {reportData.studentsAboveRequiredPercentage}</p>
+            </div>
+            <button className="bg-blue-500 text-white px-4 py-2 rounded-lg mt-4" onClick={fetchReport}>View Report</button>
+
             </div>
         </div>
     )

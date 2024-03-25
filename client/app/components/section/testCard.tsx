@@ -3,6 +3,7 @@ import { useEffect, useState } from "react"
 import { generateMarksheet, getSectionTestMarking } from "../../api/query"
 import { generateReport, createReport } from "../../api/mutation";
 import { useParams } from "next/navigation";
+import Link from "next/link";
 
 export const TestCard = ({testData}: any) => {
 
@@ -120,6 +121,7 @@ export const TestCard = ({testData}: any) => {
                 {
                     markings && markings.length ? (
                         <>
+                            <Link href={`/marking/${testData.id}`} className="bg-blue-500 text-center text-white px-4 py-2 rounded-lg mt-4"> See Marking Details </Link> 
                             <button className="bg-blue-500 text-white px-4 py-2 rounded-lg mt-4" onClick={generateSectionReport}>Generate Report</button>
                         </>
                     ) :(<>

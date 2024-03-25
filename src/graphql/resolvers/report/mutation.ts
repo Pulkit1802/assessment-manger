@@ -14,6 +14,8 @@ export const mutations = {
             reports = await genSectionReport(data);
         } else if (data.type === "program") {
             reports = await genProgramReport(data)
+        } else if (data.type === "course") {
+            reports = await generateCourseReport(data);
         }
 
         // console.log(reports); 
@@ -28,6 +30,105 @@ export const mutations = {
         console.log(rep);
         return true;
     }
+}
+
+const generateCourseReport = async (data: any) => {
+
+    const course = await prisma.course.findUnique({
+        where: {
+            id: data.courseId,
+        }
+    });
+
+    if (!course)
+        throw new ApiError(404, "Course not found");
+
+    const testReports = await prisma.report.findMany({
+        where: {
+            testId: data.testId,
+        },
+        include: {
+            questionsReport: true,
+        }
+    })
+
+    const sections = await prisma.section.findMany({
+        where: {
+            courseId: data.courseId,
+        }, include: {
+            students: true
+        }
+    });
+
+    let totalStudents = 0;
+
+    for (let section of sections) {
+        totalStudents += section.students.length;
+    }
+
+    const finalReport: any = {};
+    let aboveCounter: number = 0;
+
+    for (let report of testReports) {
+        const {objective, questionsReport} = report;
+
+        if (!finalReport[objective])
+            finalReport[objective] = {
+                totalStudents: 0,
+                avgMarks: 0,
+                studentsAboveRequiredPercentage: 0,
+                questionsReport: [],
+            }
+
+        finalReport[objective].totalStudents += report.totalStudents;
+        finalReport[objective].avgMarks += report.avgMarks;
+        finalReport[objective].studentsAboveRequiredPercentage += report.studentsAboveRequiredPercentage;
+
+        questionsReport.forEach((questionReport: any) => {
+            const {questionId, avgMarks, studentsAttempted, studentsAboveRequiredPercentage} = questionReport;
+            const question = {
+                questionId,
+                avgMarks,
+                studentsAttempted,
+                studentsAboveRequiredPercentage
+            }
+
+            finalReport[objective].questionsReport.push(question);
+        });
+
+    }
+
+    for (const [objective, report] of Object.entries(finalReport)) {
+        const attainment = (report.studentsAboveRequiredPercentage / report.totalStudents) > 0.7 ? 3 : (report.studentsAboveRequiredPercentage / report.totalStudents) > 0.6 ? 2 : (report.studentsAboveRequiredPercentage / report.totalStudents) > 0.5 ? 1 : 0;
+        
+        await prisma.report.create({
+            data: {
+                testId: data.testId,
+                courseId: data.courseId,
+                objective: +objective,
+                name: data.name,
+                type: data.type,
+                avgMarks: report.avgMarks / report.questionsReport.length,
+                totalStudents: report.totalStudents,
+                studentsAboveRequiredPercentage: report.studentsAboveRequiredPercentage,
+                coAttainmentLevel: attainment,
+                questionsReport: {
+                    createMany: {
+                        data: report.questionsReport,
+                    }
+                }
+            }
+        })
+    
+    }
+
+    return await prisma.report.findMany({
+        where: {
+            testId: data.testId,
+            courseId: data.courseId,
+        }
+    })
+
 }
 
 const genSectionReport = async (data: any) => {
@@ -248,7 +349,7 @@ const genSectionReport = async (data: any) => {
 
         const course = section?.course;
 
-        let attainmentLevel = 0
+        let attainmentLevel = ((+aboveReqPercentage)/(+totalStudents)) > 0.7 ? 3 : ((+aboveReqPercentage)/(+totalStudents)) > 0.6 ? 2 : ((+aboveReqPercentage)/(+totalStudents)) > 0.5 ? 1 : 0;
 
         if (course?.attainments.length) {
             for(const attainment of course.attainments) {

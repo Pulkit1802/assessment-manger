@@ -15,11 +15,14 @@ export const queries = {
 
     },
 
-    courses: async (_: any, args: any) => {
+    courses: async (_: any, args: any, ctx: any) => {
         const {where} = args || {};
 
         const courses = prisma.course.findMany({
-            where,
+            where: {
+                cordinatorId: ctx.user.id,
+                ...where                
+            }
         });
 
         return courses;

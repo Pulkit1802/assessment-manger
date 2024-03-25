@@ -20,12 +20,13 @@ export const queries = {
         const {where} = args || {}
 
         // console.log('report', where);
+        console.log(where);
 
         const reports = await prisma.report.findMany({
             where
         });
 
-        console.log(reports);
+        // console.log(reports);
 
         return reports;
 

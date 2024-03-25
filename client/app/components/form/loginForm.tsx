@@ -52,7 +52,7 @@ export const LoginForm = () => {
     useEffect(() => {
         const user = localStorage.getItem("user");
         if (user) 
-            redirect("/dashboard/"+JSON.parse(user).role.toLowerCase())
+            redirect("/section/"+JSON.parse(user).role.toLowerCase())
     })
     
     return (

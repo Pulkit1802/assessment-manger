@@ -168,7 +168,7 @@ export const mutations = {
 
                     let key = part.name+'_'+question.name;
 
-                    console.log(key, studentMark[key])
+                    // console.log(key, studentMark[key])
 
                     if (studentMark[key]) {
                         thisPartMarks.push({
@@ -206,21 +206,32 @@ export const mutations = {
 
             })
 
-            await prisma.marking.create({
-                data: {
-                    studentId: student.id,
-                    testId,
-                    totalMarksObtained,
-                    sectionId,
-                    questionWiseMarksObtained: {
-                        createMany: {
-                            data: studentQuestionWiseMarks,
-                        },
-                    },
-                },
-            });
+            // console.log('ola komo estas?')
 
-            // console.log(studentQuestionWiseMarks);
+            if (typeof totalMarksObtained === 'number') {
+                try {
+                    const marking = await prisma.marking.create({
+                        data: {
+                            studentId: student.id,
+                            testId,
+                            totalMarksObtained,
+                            sectionId,
+                            questionWiseMarksObtained: {
+                                createMany: {
+                                    data: studentQuestionWiseMarks,
+                                },
+                            },
+                            
+                        },
+                    });
+    
+                    console.log(marking);
+                } catch (err) {
+                    console.log(err);
+                }
+                
+
+            }
 
         })
 

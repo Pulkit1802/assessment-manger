@@ -36,6 +36,7 @@ input StudentWhereInput {
     regNo: String
     email: String
     phoneNumber: String
+    faId: ID
 }
 
 input StudentUpdateInput {

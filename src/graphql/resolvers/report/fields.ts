@@ -6,6 +6,13 @@ export const fields = {
             return await prisma.questionReport.findMany({
                 where: {
                     reportId: parent.id
+                },
+                include: {
+                    "question": {
+                        include: {
+                            "part": true
+                        }
+                    }
                 }
             })
         },

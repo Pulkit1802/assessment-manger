@@ -36,4 +36,5 @@ input ReportWhereInput {
     sectionId: String
     programId: String
     testId: String
+    courseId: ID
 }

@@ -5,31 +5,31 @@ import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import { TestCard } from "../../components/section/testCard";
 import { ReportCard } from "../../components/section/reportCard";
-import { getSection, getSectionReports, getCourses } from "../../api/query";
+import { getSectionCourse, getCourseReport } from "../../api/query";
+
 
 export default function Page() {
 
-    const [sectionId, setSectionId] = useState<any>("");
-    const [section, setSection] = useState<any>(null);
+    const params = useParams();
+
     const [course, setCourse] = useState<any>([]);
     const [tests, setTests] = useState<any>([]);
     const [reports, setReports] = useState<any>([]);
-    const [user, setUser] = useState<any>({});
-    const params = useParams();
 
     const fetchSections = async () => {
         
         try {
-            const res = await getSection(params.slug);
-            // console.log(res)
-            if (res.data.data && res.data.data.section) {
-                setSection(res.data.data.section)
-                setTests(res.data.data.section.course.tests);
+            const res = await getSectionCourse(params.slug);
+            console.log(res)
+            if (res.data.data && res.data.data) {
+                setCourse(res.data.data.course)
+                setTests(res.data.data.course.tests);
             }
-            const sectionReports = await getSectionReports(params.slug)
-            console.log(sectionReports)
+            const sectionReports = await getCourseReport(params.slug)
+            // console.log(sectionReports)
             if (sectionReports.data.data && sectionReports.data.data.reports)
                 setReports(sectionReports.data.data.reports)
+            
         } catch (error) {
             console.log(error)
         }
@@ -38,7 +38,6 @@ export default function Page() {
 
     useEffect(() => {
         if(params.slug) {
-            setSectionId(params.slug);
             fetchSections();
         }
     }, [])
@@ -55,7 +54,15 @@ export default function Page() {
                         <div className="grid grid-cols-3 gap-4 p-4">
                             {
                                 tests.map((test: any, index: number) => {
-                                    return <TestCard key={index} testData={test} />
+                                    return (
+                                        <div className="bg-gray-200 text-lg text-gray-800 shadow-md py-8 px-6
+                                        hover:shadow-lg hover:bg-gray-100">
+                                            <div className="flex flex-col justify-start">
+                                                <p>Name: {test.name}</p>
+                                                <p>Marking Deadline: {test.markUploadDeadline}</p>
+                                            </div>
+                                        </div>
+                                    )
                                 })
                             }
                     </div>
@@ -86,5 +93,4 @@ export default function Page() {
 
         </div>
     )
-
 }

@@ -11,11 +11,13 @@ import { Approval } from "./approval";
 
 export const CreationManager = () => {
 
-    const [activity, setactivity] = useState("test")
+    const [activity, setactivity] = useState("approval")
 
     const formChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         setactivity(e.target.value)
     }
+
+    const user = JSON.parse(localStorage.getItem("user") || "{}")
 
     return (
         <div className="w-10/12 mx-auto mt-8 bg-gray-100 text-gray-800 py-8 flex flex-col justify-center items-center">

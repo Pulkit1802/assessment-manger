@@ -189,25 +189,27 @@ export const getSectionTestMarking = async (data: any) => {
     const query = `
         query Markings($where: MarkingWhereInput) {
             markings(where: $where) {
-            id
-            questionWiseMarksObtained {
-                marksObtained
-                question {
-                    maxMarks
-                    name
-                    objective
-                    part {
+                id
+                questionWiseMarksObtained {
+                    marksObtained
+                    question {
+                        maxMarks
                         name
+                        objective
+                        part {
+                            name
+                        }
                     }
                 }
-            }
-            student {
-                regNo
-            }
+                student {
+                    regNo
+                }
             }
         }
-    `
+    `;
 
-    return await graphqlApi.post('/', { query, variables: { ...data } });
+    const variables = { where: {...data} }; // Assign the 'where' argument to the variables object
+
+    return await graphqlApi.post('/', { query, variables });
 
 }

@@ -18,6 +18,8 @@ export const queries = {
     students: async (_: any, args: any) => {
         const {where} = args;
 
+        console.log(where);
+
         const students = prisma.student.findMany({
             where,
         });
